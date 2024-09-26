@@ -1,0 +1,98 @@
+<ion-header [translucent]="true" >
+  
+  <ion-toolbar>
+ 
+
+    <ion-grid>
+      <ion-row>
+        <ion-col>
+          <ion-toolbar>
+            <ion-buttons slot="start">
+              <ion-menu-button auto-hide="false"></ion-menu-button>
+            </ion-buttons> 
+          </ion-toolbar>
+        </ion-col>
+
+        <ion-col>    
+          <ion-header>  
+            <ion-toolbar>
+              <ion-searchbar></ion-searchbar>
+            </ion-toolbar>
+          </ion-header>
+        </ion-col>
+
+      </ion-row>
+    </ion-grid>
+
+
+
+    
+  </ion-toolbar>
+  <div class="container" style="background-color: #4A6675; padding: 5px;">
+    <ion-title class=".ion-padding">Lista de empleados</ion-title>
+  </div>
+
+
+</ion-header>
+
+<ion-content [fullscreen]="true" >
+  <ion-header collapse="condense">
+    <ion-toolbar>
+      <ion-title size="large">trabajadores</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+
+  <ion-content class="ion-padding">
+    <ion-button id="open-modal" expand="block">Agregar trabajador</ion-button>
+  
+    <ion-modal #modal trigger="open-modal">
+      <ng-template>
+        
+          <ion-toolbar>
+            <ion-title>Agregar trabajador</ion-title>
+            <ion-buttons slot="end">
+              <ion-button color="light" (click)="modal.dismiss()">Close</ion-button>
+            </ion-buttons>
+          </ion-toolbar>
+          <ion-list>
+            <ion-toolbar>
+            <ion-item>
+                  <ion-label position="floating">email</ion-label>
+                  <ion-input type="email" placeholder="ingrese su email"	[(ngModel)]="trabajador.email"></ion-input>
+                  
+                  <ion-label position="floating">contraseña</ion-label>
+                  <ion-input type="password" placeholder="ingrese su contraseña" [(ngModel)]="trabajador.contrasena"></ion-input>
+
+                  <ion-label position="floating">Rut</ion-label>
+                  <ion-input type="text" [(ngModel)]="trabajador.rut_empleado"></ion-input>
+
+                  <ion-label position="floating">Nombre</ion-label>
+                  <ion-input type="text" [(ngModel)]="trabajador.nombre"></ion-input>
+
+                  <ion-label position="floating">Apellido</ion-label>
+                  <ion-input type="text" [(ngModel)]="trabajador.apellido"></ion-input>
+
+                  <ion-label position="floating">telefono</ion-label>
+                  <ion-input type="number" [(ngModel)]="trabajador.telefono"></ion-input>
+
+                  <ion-label position="floating">cargo</ion-label>
+                  <ion-select aria-label="cargo" value="conserje" [(ngModel)]="trabajador.cargo">
+                    <ion-select-option value="conserje">conserje</ion-select-option>
+                    <ion-select-option value="aseo">aseo</ion-select-option>
+                    <ion-select-option value="administrador">administrador</ion-select-option>
+                  </ion-select>
+
+                  <ion-button (click)="agregarTrabajador()">Agregar trabajador</ion-button>
+            </ion-item>
+          </ion-toolbar>
+          
+          </ion-list>
+        
+      </ng-template>
+    </ion-modal>
+  </ion-content>
+  
+
+</ion-content>
+

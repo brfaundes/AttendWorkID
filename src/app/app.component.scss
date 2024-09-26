@@ -1,5 +1,31 @@
+//Efecto del menu
+
+ion-menu::part(backdrop) {
+  background-color: #003149f1;
+  
+}
+
+ion-menu::part(container) {
+  box-shadow: 10px 0px 50px #2e4957;
+}
+
+// Color del menu
+
 ion-menu ion-content {
-  --background: var(--ion-item-background, var(--ion-background-color, #fff));
+  --background: #2e4957;
+}
+ion-menu ion-item{
+  --background: #2e4957;
+}
+
+ion-list{
+  background-color: #2e4957;
+}
+
+//
+
+ion-menu ion-split-pane {
+  --background: #2e4957;
 }
 
 ion-menu.md ion-content {
@@ -7,10 +33,12 @@ ion-menu.md ion-content {
   --padding-end: 8px;
   --padding-top: 20px;
   --padding-bottom: 20px;
+  
 }
 
 ion-menu.md ion-list {
   padding: 20px 0;
+  --background: #2e4957;
 }
 
 ion-menu.md ion-note {
@@ -20,7 +48,9 @@ ion-menu.md ion-note {
 ion-menu.md ion-list-header,
 ion-menu.md ion-note {
   padding-left: 10px;
+  --background: #2e4957;
 }
+
 
 ion-menu.md ion-list#inbox-list {
   border-bottom: 1px solid var(--ion-background-color-step-150, #d7d8da);
@@ -41,6 +71,8 @@ ion-menu.md ion-list#labels-list ion-list-header {
   color: #757575;
 
   min-height: 26px;
+
+  
 }
 
 ion-menu.md ion-item {
