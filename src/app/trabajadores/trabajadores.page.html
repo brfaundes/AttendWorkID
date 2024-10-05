@@ -91,8 +91,37 @@
         
       </ng-template>
     </ion-modal>
+
+    <ion-list *ngIf="listaDeTrabajadores.length > 0">
+      <ion-item *ngFor="let trabajador of listaDeTrabajadores">
+        <ion-label>
+          <h2>{{ trabajador.nombre }} {{ trabajador.apellido }}</h2>
+          <p>Cargo: {{ trabajador.cargo }}</p>
+          <p>Email: {{ trabajador.email }}</p>
+          <p>Teléfono: {{ trabajador.telefono }}</p>
+        </ion-label>
+        <ion-button color="danger" (click)="eliminarTrabajador(trabajador.id)">Eliminar</ion-button>
+      </ion-item>
+    </ion-list>
+  
+    <ion-item *ngIf="listaDeTrabajadores.length === 0">
+      <ion-label>No hay trabajadores registrados.</ion-label>
+    </ion-item>
+  
   </ion-content>
   
 
+
 </ion-content>
 
+
+
+<!--
+  <ion-list>
+    <ion-item>
+      @for (user of lista_trabajadores; track $index) {
+      <ion-label>{{ user.nombre }} {{ user.apellido }}</ion-label>
+      }
+    </ion-item>
+  </ion-list>
+-->

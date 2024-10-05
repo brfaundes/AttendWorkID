@@ -1,4 +1,7 @@
 import { Component } from '@angular/core';
+import { addIcons } from 'ionicons';
+import { archive, heart, trash } from 'ionicons/icons';
+
 @Component({
   selector: 'app-root',
   templateUrl: 'app.component.html',
@@ -13,6 +16,7 @@ export class AppComponent {
 
   public labels = [{title: 'Cerrar sesion', url: 'login', icon: 'exit'}];
 
-  constructor() {}
+  constructor() {addIcons({ archive, heart, trash });}
+  
 }
 
