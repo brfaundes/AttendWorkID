@@ -1,98 +1,163 @@
-<ion-header [translucent]="true" >
-  
-  <ion-toolbar>
- 
+<ion-header [translucent]="true">
 
+  <ion-toolbar>
     <ion-grid>
       <ion-row>
         <ion-col>
           <ion-toolbar>
-            <ion-buttons slot="start">
-              <ion-menu-button auto-hide="false"></ion-menu-button>
-            </ion-buttons> 
+            <ion-searchbar 
+              [(ngModel)]="rutBusqueda" 
+              (ionInput)="buscarPorRut()" 
+              placeholder="Buscar por RUT"
+              class="busquedaRUT">
+            </ion-searchbar>
           </ion-toolbar>
         </ion-col>
-
-        <ion-col>    
-          <ion-header>  
-            <ion-toolbar>
-              <ion-searchbar></ion-searchbar>
-            </ion-toolbar>
-          </ion-header>
-        </ion-col>
-
       </ion-row>
     </ion-grid>
-
-
-
-    
   </ion-toolbar>
-  <div class="container" style="background-color: #4A6675; padding: 5px;">
-    <ion-title class=".ion-padding">Lista de empleados</ion-title>
+  <div class="container" style="background-color: #2D3250; padding: 5px; display: flex; justify-content: space-between; align-items: center;">
+    <ion-title class="ion-padding">Lista de empleados</ion-title>
+    <ion-button class="botonAgregar" id="open-modal-agregar" expand="block" (click)="resetFormulario()" style="margin-left: auto;">Agregar trabajador</ion-button>
   </div>
 
 
 </ion-header>
 
 <ion-content [fullscreen]="true" >
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">trabajadores</ion-title>
-    </ion-toolbar>
-  </ion-header>
 
 
-  <ion-content class="ion-padding">
-    <ion-button id="open-modal" expand="block">Agregar trabajador</ion-button>
-  
-    <ion-modal #modal trigger="open-modal">
+
+  <ion-content >
+    <!-- Modal para agregar trabajador -->
+    <ion-modal #modalAgregar trigger="open-modal-agregar">
       <ng-template>
-        
+        <ion-header>
           <ion-toolbar>
             <ion-title>Agregar trabajador</ion-title>
             <ion-buttons slot="end">
-              <ion-button color="light" (click)="modal.dismiss()">Close</ion-button>
+              <ion-button color="light" (click)="modalAgregar.dismiss()">Cerrar</ion-button>
             </ion-buttons>
           </ion-toolbar>
-          <ion-list>
-            <ion-toolbar>
-            <ion-item>
-                  <ion-label position="floating">email</ion-label>
-                  <ion-input type="email" placeholder="ingrese su email"	[(ngModel)]="trabajador.email"></ion-input>
-                  
-                  <ion-label position="floating">contraseña</ion-label>
-                  <ion-input type="password" placeholder="ingrese su contraseña" [(ngModel)]="trabajador.contrasena"></ion-input>
-
-                  <ion-label position="floating">Rut</ion-label>
-                  <ion-input type="text" [(ngModel)]="trabajador.rut_empleado"></ion-input>
-
-                  <ion-label position="floating">Nombre</ion-label>
-                  <ion-input type="text" [(ngModel)]="trabajador.nombre"></ion-input>
-
-                  <ion-label position="floating">Apellido</ion-label>
-                  <ion-input type="text" [(ngModel)]="trabajador.apellido"></ion-input>
-
-                  <ion-label position="floating">telefono</ion-label>
-                  <ion-input type="number" [(ngModel)]="trabajador.telefono"></ion-input>
-
-                  <ion-label position="floating">cargo</ion-label>
-                  <ion-select aria-label="cargo" value="conserje" [(ngModel)]="trabajador.cargo">
-                    <ion-select-option value="conserje">conserje</ion-select-option>
-                    <ion-select-option value="aseo">aseo</ion-select-option>
-                    <ion-select-option value="administrador">administrador</ion-select-option>
-                  </ion-select>
-
-                  <ion-button (click)="agregarTrabajador()">Agregar trabajador</ion-button>
-            </ion-item>
-          </ion-toolbar>
-          
-          </ion-list>
-        
+        </ion-header>
+  
+        <ion-content class="ion-padding">
+          <!-- Formulario de agregar trabajador -->
+          <ion-item>
+            <ion-label position="floating">Email</ion-label>
+            <ion-input type="email" [(ngModel)]="trabajador.email"></ion-input>
+          </ion-item>
+          <ion-item>
+            <ion-label position="floating">Contraseña</ion-label>
+            <ion-input type="password" [(ngModel)]="trabajador.contrasena"></ion-input>
+          </ion-item>
+          <ion-item>
+            <ion-label position="floating">Rut</ion-label>
+            <ion-input type="text" [(ngModel)]="trabajador.rut_empleado"></ion-input>
+          </ion-item>
+          <ion-item>
+            <ion-label position="floating">Nombre</ion-label>
+            <ion-input type="text" [(ngModel)]="trabajador.nombre"></ion-input>
+          </ion-item>
+          <ion-item>
+            <ion-label position="floating">Apellido</ion-label>
+            <ion-input type="text" [(ngModel)]="trabajador.apellido"></ion-input>
+          </ion-item>
+          <ion-item>
+            <ion-label position="floating">Teléfono</ion-label>
+            <ion-input type="number" [(ngModel)]="trabajador.telefono"></ion-input>
+          </ion-item>
+          <ion-item>
+            <ion-label position="floating">Cargo</ion-label>
+            <ion-select [(ngModel)]="trabajador.cargo">
+              <ion-select-option value="conserje">Conserje</ion-select-option>
+              <ion-select-option value="aseo">Aseo</ion-select-option>
+              <ion-select-option value="administrador">Administrador</ion-select-option>
+            </ion-select>
+          </ion-item>
+        </ion-content>
+  
+        <ion-footer>
+          <!-- Botón para agregar trabajador -->
+          <ion-button expand="block" (click)="agregarTrabajador()">Agregar trabajador</ion-button>
+        </ion-footer>
       </ng-template>
     </ion-modal>
+  
+    <!-- Lista de trabajadores -->
+    <ion-card>
+
+    <ion-list *ngIf="listaDeTrabajadores.length > 0">
+      <ion-item *ngFor="let trabajador of listaDeTrabajadores">
+        <ion-label>
+          <h2>{{ trabajador.nombre }} {{ trabajador.apellido }}</h2>
+          <p>Cargo: {{ trabajador.cargo }}</p>
+          <p>Email: {{ trabajador.email }}</p>
+          <p>Rut: {{ trabajador.rut_empleado }}</p>
+        </ion-label>
+  
+        <!-- Botón para cargar los datos en el formulario de edición -->
+        <ion-button class="botonEditar" (click)="cargarTrabajadorParaEditar(trabajador); modalEditar.present()">Editar</ion-button>
+        
+        <!-- Botón para eliminar trabajador -->
+        <ion-button class="botonEliminar" (click)="confirmarEliminarTrabajador(trabajador.id)">Eliminar</ion-button>
+      </ion-item>
+    </ion-list>
+    </ion-card>
+    <!-- Modal para editar trabajador -->
+    <ion-modal #modalEditar>
+      <ng-template>
+        <ion-header>
+          <ion-toolbar>
+            <ion-title>Editar trabajador</ion-title>
+            <ion-buttons slot="end">
+              <ion-button color="light" (click)="modalEditar.dismiss()">Cerrar</ion-button>
+            </ion-buttons>
+          </ion-toolbar>
+        </ion-header>
+  
+        <ion-content class="ion-padding">
+          <!-- Formulario de editar trabajador (el mismo formulario) -->
+          <ion-item>
+            <ion-label position="floating">Email</ion-label>
+            <ion-input type="email" [(ngModel)]="trabajador.email"></ion-input>
+          </ion-item>
+          <ion-item>
+            <ion-label position="floating">Contraseña</ion-label>
+            <ion-input type="password" [(ngModel)]="trabajador.contrasena"></ion-input>
+          </ion-item>
+          <ion-item>
+            <ion-label position="floating">Rut</ion-label>
+            <ion-input type="text" [(ngModel)]="trabajador.rut_empleado"></ion-input>
+          </ion-item>
+          <ion-item>
+            <ion-label position="floating">Nombre</ion-label>
+            <ion-input type="text" [(ngModel)]="trabajador.nombre"></ion-input>
+          </ion-item>
+          <ion-item>
+            <ion-label position="floating">Apellido</ion-label>
+            <ion-input type="text" [(ngModel)]="trabajador.apellido"></ion-input>
+          </ion-item>
+          <ion-item>
+            <ion-label position="floating">Teléfono</ion-label>
+            <ion-input type="number" [(ngModel)]="trabajador.telefono"></ion-input>
+          </ion-item>
+          <ion-item>
+            <ion-label position="floating">Cargo</ion-label>
+            <ion-select [(ngModel)]="trabajador.cargo">
+              <ion-select-option value="conserje">Conserje</ion-select-option>
+              <ion-select-option value="aseo">Aseo</ion-select-option>
+              <ion-select-option value="administrador">Administrador</ion-select-option>
+            </ion-select>
+          </ion-item>
+        </ion-content>
+  
+        <ion-footer>
+          <!-- Botón para guardar cambios en la edición -->
+          <ion-button expand="block" (click)="confirmarEditarTrabajador()">Guardar cambios</ion-button>
+        </ion-footer>
+      </ng-template>
+    </ion-modal>
+  
   </ion-content>
   
-
-</ion-content>
-

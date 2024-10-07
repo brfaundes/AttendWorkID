@@ -1,22 +1,58 @@
 <ion-header [translucent]="true">
-  <ion-toolbar colo="success">
-    <ion-title class="center-title" >login AttendWorkID </ion-title>
+  <ion-toolbar>
+    <ion-title>AttendWorkID</ion-title>
   </ion-toolbar>
+
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+
 </ion-header>
 
 <ion-content [fullscreen]="true">
 
-  <ion-item>
-    <ion-label position="floating">CORREO</ion-label>
-    <ion-input type="email"></ion-input>
-  </ion-item>
+  <div class="row align-items-center" style="padding-top: 10px; padding-bottom: 10px;">
+    <div class="class col"></div>
+    <div id="login-card" class="card mb-3" style="text-align: center; max-width: 540px;">
+      <div>
+        <div>
+          <div class="card-body">
+            <div class="card-header">
+              <h5 class="card-title">INICIO DE SESION</h5>
+            </div>
 
-  <ion-item>
-    <ion-label position="floating">CONTRASEÑA</ion-label>
-    <ion-input type="password"></ion-input>
-  </ion-item>
+            <form (ngSubmit)="login()">
 
-  <ion-button href="trabajadores" class="ion-padding" color="primary">ACCEDER</ion-button>
-  <ion-button class="ion-padding" color="primary">Registrarse</ion-button>
-  
+              <div class="form-floating mb-3">
+                <input name="rutEmpleado" [(ngModel)]="rutEmpleado" type="text" class="form-control" id="floatingInput"
+                  placeholder="Rut" required>
+                <label for="floatingInput">Ingrese su rut</label>
+              </div>
+
+              <div class="form-floating">
+                <input name="contrasena" [(ngModel)]="contrasena" type="password" class="form-control"
+                  id="floatingPassword" placeholder="Constraseña" required>
+                <label for="floatingPassword">Ingrese su contraseña</label>
+              </div>
+
+              <ion-button class="boton-iniciosesion" expand="full" type="submit" >Iniciar Sesión</ion-button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="class col"></div>
+  </div>
+
+
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+    crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+    integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
+    crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"
+    integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy"
+    crossorigin="anonymous"></script>
 </ion-content>
