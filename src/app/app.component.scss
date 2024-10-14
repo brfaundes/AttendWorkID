@@ -1,31 +1,32 @@
-//Efecto del menu
+@import url('https://fonts.googleapis.com/css2?family=Afacad+Flux:wght@100..1000&display=swap');
+
+* {
+  font-family: 'Afacad Flux', sans-serif;
+}
 
 ion-menu::part(backdrop) {
-  background-color: #003149f1;
+  background-color: #000000;
   
 }
 
-ion-menu::part(container) {
-  box-shadow: 10px 0px 50px #2e4957;
-}
 
 // Color del menu
 
 ion-menu ion-content {
-  --background: #2e4957;
+  --background: #2D3250;
 }
 ion-menu ion-item{
-  --background: #2e4957;
+  --background: #2D3250;
 }
 
 ion-list{
-  background-color: #2e4957;
+  background-color: #2D3250;
 }
 
 //
 
 ion-menu ion-split-pane {
-  --background: #2e4957;
+  --background: #2D3250;
 }
 
 ion-menu.md ion-content {
@@ -38,7 +39,7 @@ ion-menu.md ion-content {
 
 ion-menu.md ion-list {
   padding: 20px 0;
-  --background: #2e4957;
+  --background: #2D3250;
 }
 
 ion-menu.md ion-note {
@@ -48,7 +49,7 @@ ion-menu.md ion-note {
 ion-menu.md ion-list-header,
 ion-menu.md ion-note {
   padding-left: 10px;
-  --background: #2e4957;
+  --background: #2D3250;
 }
 
 

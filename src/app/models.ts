@@ -1,5 +1,5 @@
 export interface Trabajador {
-  id?: string; // Añadimos id como campo opcional
+  id?: string; // El campo id es opcional, ya que Firebase lo asigna automáticamente
   email: string;
   contrasena: string;
   rut_empleado: string;
