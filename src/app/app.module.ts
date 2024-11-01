@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { RouteReuseStrategy } from '@angular/router';
 import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
@@ -8,13 +8,20 @@ import { AngularFireModule } from '@angular/fire/compat';
 import { AngularFirestoreModule } from '@angular/fire/compat/firestore';
 import { firebaseConfig } from '../environments/environment';
 
+import { FormsModule } from '@angular/forms';
+import { FullCalendarModule } from '@fullcalendar/angular';
+
 // Importar el módulo de trabajadores
 import { TrabajadoresPageModule } from './trabajadores/trabajadores.module';
+
+import { AsignarTurnoModalComponent } from './modals/asignar-turno-modal/asignar-turno-modal.component';
+import { EditShiftModalComponent } from './modals/edit-shift-modal/edit-shift-modal.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    // Si `TrabajadoresPage` no se usa directamente en el `AppModule`, no es necesario declararlo aquí.
+    AsignarTurnoModalComponent,
+    EditShiftModalComponent,
   ],
   imports: [ 
     BrowserModule, 
@@ -22,9 +29,12 @@ import { TrabajadoresPageModule } from './trabajadores/trabajadores.module';
     AppRoutingModule, 
     AngularFireModule.initializeApp(firebaseConfig),
     AngularFirestoreModule,
-    TrabajadoresPageModule  // Asegúrate de importar este módulo
+    TrabajadoresPageModule,
+    FullCalendarModule,
+    FormsModule
   ],
   providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy }],
   bootstrap: [AppComponent],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class AppModule {}

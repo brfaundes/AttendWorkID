@@ -1,5 +1,5 @@
 export interface Trabajador {
-  id?: string; // El campo id es opcional, ya que Firebase lo asigna automáticamente
+  id?: string;
   email: string;
   contrasena: string;
   rut_empleado: string;
@@ -7,4 +7,5 @@ export interface Trabajador {
   apellido: string;
   telefono: string;
   cargo: string;
+  fotoUrl?: string; // Nueva propiedad para la URL de la foto
 }

@@ -10,7 +10,7 @@ export class AppComponent {
   public appPages = [
     { title: 'Inicio', url: 'home', icon: 'home' },
     { title: 'Trabajadores', url: 'trabajadores', icon: 'hammer' },
-    { title: 'Turnos', url: '/folder/favorites', icon: 'calendar' },
+    { title: 'Turnos', url: 'calendario', icon: 'calendar' },
   ];
 
   public labels = [{title: 'Cerrar sesion', url: 'login', icon: 'exit'}];

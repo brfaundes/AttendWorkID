@@ -1,5 +1,4 @@
-<ion-header [translucent]="true">
-
+<ion-header [translucent]="true"> 
   <ion-toolbar>
     <ion-grid>
       <ion-row>
@@ -20,15 +19,13 @@
   <!-- Mostrar el botón "Agregar trabajador" solo si el usuario es administrador -->
   <div class="container" style="background-color: #2D3250; padding: 5px; display: flex; justify-content: space-between; align-items: center;">
     <ion-title class="ion-padding">Lista de empleados</ion-title>
-    <!-- Mostrar solo si el usuario es administrador -->
     <ion-button *ngIf="isAdmin" class="botonAgregar" id="open-modal-agregar" expand="block" (click)="resetFormulario()" style="margin-left: auto;">
       Agregar trabajador
     </ion-button>
   </div>
-
 </ion-header>
 
-<ion-content [fullscreen]="true" >
+<ion-content [fullscreen]="true">
 
   <!-- Modal para agregar trabajador -->
   <ion-modal #modalAgregar trigger="open-modal-agregar">
@@ -76,10 +73,15 @@
             <ion-select-option value="administrador">Administrador</ion-select-option>
           </ion-select>
         </ion-item>
+        
+        <!-- Campo para cargar la foto al agregar trabajador -->
+        <ion-item>
+          <ion-label position="stacked">Foto</ion-label>
+          <input type="file" (change)="onImageSelected($event)" />
+        </ion-item>
       </ion-content>
 
       <ion-footer>
-        <!-- Botón para agregar trabajador -->
         <ion-button expand="block" (click)="agregarTrabajador()">Agregar trabajador</ion-button>
       </ion-footer>
     </ng-template>
@@ -87,28 +89,33 @@
 
   <!-- Lista de trabajadores -->
   <ion-card>
-
     <ion-list *ngIf="listaDeTrabajadores.length > 0">
       <ion-item *ngFor="let trabajador of listaDeTrabajadores">
+        
+        <!-- Mostrar la imagen del trabajador si existe -->
+        <ion-thumbnail slot="start">
+          <img *ngIf="trabajador.fotoUrl" [src]="trabajador.fotoUrl" alt="Foto de trabajador" />
+          <ion-icon *ngIf="!trabajador.fotoUrl" name="person-circle-outline"></ion-icon>
+        </ion-thumbnail>
+
         <ion-label>
-          <h2>{{ trabajador.nombre }} {{ trabajador.apellidos }}</h2>
+          <h2>{{ trabajador.nombre }} {{ trabajador.apellido }}</h2>
           <p>Cargo: {{ trabajador.cargo }}</p>
           <p>Email: {{ trabajador.email }}</p>
           <p>Rut: {{ trabajador.rut_empleado }}</p>
         </ion-label>
 
-        <!-- Botón para cargar los datos en el formulario de edición, solo visible para administradores -->
+        <!-- Botón para editar trabajador (solo visible para administradores) -->
         <ion-button *ngIf="isAdmin" shape="round" class="botonEditar" (click)="cargarTrabajadorParaEditar(trabajador); modalEditar.present()">
           <ion-icon slot="icon-only" name="create"></ion-icon>
         </ion-button>
         
-        <!-- Botón para eliminar trabajador, solo visible para administradores -->
-        <ion-button *ngIf="isAdmin" shape="round" class="botonEliminar" (click)="confirmarEliminarTrabajador(trabajador.id)">
+        <!-- Botón para eliminar trabajador (solo visible para administradores) -->
+        <ion-button *ngIf="isAdmin && trabajador.id" shape="round" class="botonEliminar" (click)="confirmarEliminarTrabajador(trabajador.id!)">
           <ion-icon slot="icon-only" name="trash-bin"></ion-icon>
         </ion-button>
       </ion-item>
     </ion-list>
-    
   </ion-card>
 
   <!-- Modal para editar trabajador -->
@@ -124,7 +131,7 @@
       </ion-header>
 
       <ion-content class="ion-padding">
-        <!-- Formulario de editar trabajador (el mismo formulario) -->
+        <!-- Formulario de editar trabajador -->
         <ion-item>
           <ion-label position="floating">Email</ion-label>
           <ion-input type="email" [(ngModel)]="trabajador.email"></ion-input>
@@ -142,7 +149,7 @@
           <ion-input type="text" [(ngModel)]="trabajador.nombre"></ion-input>
         </ion-item>
         <ion-item>
-          <ion-label position="floating">apellido</ion-label>
+          <ion-label position="floating">Apellidos</ion-label>
           <ion-input type="text" [(ngModel)]="trabajador.apellido"></ion-input>
         </ion-item>
         <ion-item>
@@ -157,10 +164,15 @@
             <ion-select-option value="administrador">Administrador</ion-select-option>
           </ion-select>
         </ion-item>
+        
+        <!-- Campo para cambiar la foto al editar trabajador -->
+        <ion-item>
+          <ion-label position="stacked">Cambiar Foto</ion-label>
+          <input type="file" (change)="onEditImageSelected($event)" />
+        </ion-item>
       </ion-content>
 
       <ion-footer>
-        <!-- Botón para guardar cambios en la edición -->
         <ion-button expand="block" (click)="confirmarEditarTrabajador()">Guardar cambios</ion-button>
       </ion-footer>
     </ng-template>
