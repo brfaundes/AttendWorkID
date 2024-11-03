@@ -1,0 +1,43 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Asignar Turno</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="closeModal()">Cerrar</ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <form (ngSubmit)="assignShift()">
+    <!-- Trabajador -->
+    <ion-item>
+      <ion-label position="stacked">Trabajador</ion-label>
+      <ion-select [(ngModel)]="selectedEmployee" name="employee" required interface="alert">
+        <ion-select-option *ngFor="let employee of employees" [value]="employee">{{ employee.nombre }}</ion-select-option>
+      </ion-select>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="stacked">Fecha del turno</ion-label>
+      <ion-datetime display-format="DD/MM/YYYY" picker-format="DD/MM/YYYY" presentation="date" [(ngModel)]="selectedDate" name="selectedDate" required>
+      </ion-datetime>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="stacked">Hora de inicio</ion-label>
+      <ion-datetime display-format="HH:mm" picker-format="HH:mm" presentation="time" [(ngModel)]="startTime" name="startTime" required>
+      </ion-datetime>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="stacked">Hora de fin</ion-label>
+      <ion-datetime display-format="HH:mm" picker-format="HH:mm" presentation="time" [(ngModel)]="endTime" name="endTime" required>
+      </ion-datetime>
+    </ion-item>
+
+    <!-- Botón para asignar el turno -->
+    <ion-button expand="block" type="submit" [disabled]="!selectedEmployee || !startTime || !endTime">
+      Asignar Turno
+    </ion-button>
+  </form>
+</ion-content>

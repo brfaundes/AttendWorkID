@@ -1,0 +1,23 @@
+full-calendar {
+    height: 70%;
+    .fc-toolbar {
+        background-color: var(--ion-color-primary);
+    }
+    .fc-event {
+        background-color: var(--ion-color-secondary);
+    }
+}
+.edit-icon, .trash-icon {
+    font-size: 24px;
+    color: var(--ion-color-primary);
+    margin-left: 10px;
+    cursor: pointer;
+}
+
+.trash-icon {
+    color: red;
+}
+
+.edit-icon {
+    color: blue;
+}

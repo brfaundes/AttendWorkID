@@ -1,0 +1,20 @@
+ion-item {
+    margin-bottom: 10px;
+}
+
+ion-button {
+margin-top: 20px;
+--background: #3880ff;
+--border-radius: 8px;
+font-size: 16px;
+}
+
+ion-label {
+font-weight: bold;
+color: #333;
+}
+
+form {
+display: flex;
+flex-direction: column;
+}

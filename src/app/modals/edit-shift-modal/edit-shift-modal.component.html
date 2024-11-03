@@ -1,0 +1,44 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Modificar Turno</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="closeModal()">Cerrar</ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <form (ngSubmit)="updateShift()">
+    <ion-item>
+      <ion-label>Trabajador</ion-label>
+      <ion-select [(ngModel)]="selectedEmployee" name="employee" required>
+        <ion-select-option *ngFor="let employee of employees" [value]="employee">
+          {{ employee.nombre }}
+        </ion-select-option>
+      </ion-select>
+    </ion-item>
+
+    <!-- Modificar Fecha del Turno -->
+    <ion-item>
+      <ion-label>Fecha del Turno</ion-label>
+      <ion-datetime [(ngModel)]="selectedDate" name="date" presentation="date" required></ion-datetime>
+    </ion-item>
+
+    <!-- Hora de Inicio -->
+    <ion-item>
+      <ion-label>Hora de inicio</ion-label>
+      <ion-datetime display-format="HH:mm" picker-format="HH:mm" [(ngModel)]="startTime" name="startTime" presentation="time" required></ion-datetime>
+    </ion-item>
+
+    <!-- Hora de Fin -->
+    <ion-item>
+      <ion-label>Hora de fin</ion-label>
+      <ion-datetime display-format="HH:mm" picker-format="HH:mm" [(ngModel)]="endTime" name="endTime" presentation="time" required></ion-datetime>
+    </ion-item>
+
+    <!-- Botón para actualizar -->
+    <ion-button expand="full" type="submit" [disabled]="!selectedEmployee || !selectedDate || !startTime || !endTime">
+      Actualizar Turno
+    </ion-button>
+  </form>
+</ion-content>

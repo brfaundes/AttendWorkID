@@ -1,0 +1,55 @@
+ion-header,ion-toolbar{
+  --background: #424669;
+}
+
+ion-content{
+  --background: #B9BDD0;
+}
+
+
+//css ventana agregar trabajador/////////////////////// 
+
+ion-modal {
+  --height: 50%;
+  --border-radius: 16px;
+  --box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+}
+
+ion-modal::part(backdrop) {
+  background: rgba(209, 213, 219);
+  opacity: 1;
+}
+
+ion-modal ion-toolbar {
+  --background: rgb(14 116 144);
+  --color: white;
+}
+
+ion-footer{
+ text-align: center;
+}
+
+.busquedaRUT{
+--color: white; /* Cambia el color del texto de entrada */
+--placeholder-color: rgba(255, 255, 255, 0.5); /* Cambia el color del placeholder */
+--background: #2D3250; /* Cambia el color de fondo del searchbar */
+--icon-color: white; /* Cambia el color del ícono de búsqueda */
+}
+
+.botonEditar{
+color:rgb(255, 255, 255);
+--background: #6570af; /* Cambia el color de fondo del searchbar */
+
+}
+
+.botonEliminar{
+color:rgb(255, 255, 255);
+--background: #bc865d; /* Cambia el color de fondo del searchbar */
+}
+
+.botonAgregar{
+color:rgb(255, 255, 255);
+--background:#50598a ; /* Cambia el color de fondo del searchbar */
+
+}
+/////////////////////////////////////////////////////

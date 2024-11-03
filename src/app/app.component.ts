@@ -1,0 +1,23 @@
+import { Component } from '@angular/core';
+
+
+@Component({
+  selector: 'app-root',
+  templateUrl: 'app.component.html',
+  styleUrls: ['app.component.scss'],
+})
+export class AppComponent {
+  public appPages = [
+    { title: 'Inicio', url: 'login-rut', icon: 'home' },
+    { title: 'Trabajadores', url: 'trabajadores', icon: 'hammer' },
+    { title: 'Turnos', url: 'calendario', icon: 'calendar' },
+  ];
+
+  public labels = [{title: 'Cerrar sesion', url: 'login', icon: 'exit'}];
+
+  constructor() {}
+
+  
+
+}
+

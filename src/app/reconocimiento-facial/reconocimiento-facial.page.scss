@@ -1,0 +1,14 @@
+.video-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 300px; // Ajusta la altura según tus necesidades
+  background-color: #f0f0f0; // Color de fondo para mejor visualización
+
+  video {
+    width: 100%;
+    height: auto;
+    max-width: 100%;
+    border-radius: 8px; // Bordes redondeados, opcional
+  }
+}

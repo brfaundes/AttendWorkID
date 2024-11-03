@@ -1,0 +1,15 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Reconocimiento Facial</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <!-- Contenedor del video -->
+  <div class="video-container">
+    <video #video autoplay muted playsinline></video>
+  </div>
+
+  <!-- Botón para iniciar el reconocimiento facial -->
+  <ion-button expand="block" (click)="iniciarReconocimientoFacial()">Iniciar Reconocimiento Facial</ion-button>
+</ion-content>

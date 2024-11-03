@@ -1,0 +1,7 @@
+{
+  "name": "AttendWorkID",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}

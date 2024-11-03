@@ -1,0 +1,18 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Login por RUT</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <form (ngSubmit)="login()">
+
+    <div class="form-floating mb-3">
+      <input name="rutEmpleado" [(ngModel)]="rutEmpleado" type="text" class="form-control" id="floatingInput"
+        placeholder="Rut" required>
+      <label for="floatingInput">Ingrese su rut</label>
+    </div>
+
+    <ion-button class="boton-iniciosesion" expand="full" type="submit" >Iniciar Sesión</ion-button>
+  </form>
+</ion-content>

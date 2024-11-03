@@ -1,0 +1,43 @@
+.img-login {
+    width: 100%; /* Ajusta el ancho al 100% del contenedor */
+    height: auto; /* Permite que la altura se ajuste automáticamente */
+    object-fit: contain; /* Ajusta la imagen al contenedor sin recortar */
+    max-height: 200px;  /*  Define una altura máxima para la imagen */
+  }
+  
+  #login-card {
+    background-color:#2D3250;
+    background-size: cover; /* Ajusta la imagen para cubrir todo el card */
+    background-position: center; /* Centra la imagen */
+    display: flex;
+
+}
+
+
+#login-card .card-title, 
+   #login-card .ion-label, 
+   #login-card .ion-input {
+       color: white; /* Color de texto blanco */
+   }
+   
+  .card-body {
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 20px; 
+  }
+
+.boton-iniciosesion{
+  padding-top: 10px;
+  --background: #f5cc6cd6;
+  --color: #2D3250;
+  font-weight: bold;
+}
+
+ion-header,ion-toolbar{
+  --background: #424669;
+}
+
+ion-content{
+  --background: #2D3250;
+}
