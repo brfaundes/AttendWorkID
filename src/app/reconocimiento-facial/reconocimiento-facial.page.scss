@@ -1,14 +1,22 @@
+.camera-content {
+  --ion-background-color: black;  // Fondo negro para dar apariencia de fullscreen
+}
+
 .video-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 300px; // Ajusta la altura según tus necesidades
-  background-color: #f0f0f0; // Color de fondo para mejor visualización
+  background-color: black;
+}
 
-  video {
-    width: 100%;
-    height: auto;
-    max-width: 100%;
-    border-radius: 8px; // Bordes redondeados, opcional
-  }
+video {
+  width: 100%;
+  height: auto;
+  max-height: 100vh;
+  object-fit: cover;
 }

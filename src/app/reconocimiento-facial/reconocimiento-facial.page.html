@@ -4,12 +4,9 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
-  <!-- Contenedor del video -->
+<ion-content fullscreen="true" class="camera-content">
+  <!-- Contenedor de video en pantalla completa -->
   <div class="video-container">
-    <video #video autoplay muted playsinline></video>
+    <video #video autoplay muted></video>
   </div>
-
-  <!-- Botón para iniciar el reconocimiento facial -->
-  <ion-button expand="block" (click)="iniciarReconocimientoFacial()">Iniciar Reconocimiento Facial</ion-button>
 </ion-content>

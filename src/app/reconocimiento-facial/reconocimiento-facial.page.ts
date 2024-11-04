@@ -12,7 +12,7 @@ export class ReconocimientoFacialPage implements OnInit {
   @ViewChild('video', { static: false }) videoRef!: ElementRef<HTMLVideoElement>;
   rut: string = '';
   fotoUrl: string = '';
-  nombreUsuario: string = ''; // Atributo para almacenar el nombre del usuario
+  nombreUsuario: string = '';
   modelosCargados: boolean = false;
   reconocimientoEnProgreso: boolean = false;
 
@@ -24,12 +24,13 @@ export class ReconocimientoFacialPage implements OnInit {
     this.route.queryParams.subscribe(params => {
       this.rut = params['rut'];
       this.fotoUrl = params['fotoUrl'];
-      this.nombreUsuario = params['nombre']; // Capturamos el nombre del usuario
+      this.nombreUsuario = params['nombre'];
     });
   }
 
   async ngOnInit() {
     await this.cargarModelosFaceApi();
+    this.iniciarReconocimientoFacial();
   }
 
   async cargarModelosFaceApi() {
@@ -40,7 +41,6 @@ export class ReconocimientoFacialPage implements OnInit {
       faceapi.nets.faceRecognitionNet.loadFromUri(MODEL_URL)
     ]);
     this.modelosCargados = true;
-    console.log('Modelos de face-api.js cargados');
   }
 
   async iniciarReconocimientoFacial() {
@@ -64,39 +64,23 @@ export class ReconocimientoFacialPage implements OnInit {
 
     this.detectarRostroEnTiempoReal(referenciaRostro.descriptor);
   }
-/*
+
   async iniciarVideo() {
     const video = this.videoRef.nativeElement;
-
     try {
-      const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" } });
+      const stream = await navigator.mediaDevices.getUserMedia({
+        video: { facingMode: 'user' }
+      });
       video.srcObject = stream;
       video.play();
     } catch (error) {
-      this.mostrarAlerta("Error", "No se pudo acceder a la cámara.", "danger");
-      console.error("Error al acceder a la cámara:", error);
+      this.mostrarAlerta('Error', 'No se pudo acceder a la cámara.', 'danger');
+      console.error('Error al acceder a la cámara:', error);
     }
-  }*/
-
-    async iniciarVideo() {
-      try {
-        const video = this.videoRef.nativeElement;
-        const stream = await navigator.mediaDevices.getUserMedia({
-          video: { facingMode: 'user' } // Para cámaras frontales, usa 'environment' para la trasera
-        });
-        video.srcObject = stream;
-        video.play();
-      } catch (error) {
-        console.error('Error al acceder a la cámara:', error);
-        this.mostrarAlerta('Error', 'No se pudo acceder a la cámara. Verifica los permisos.', 'danger');
-      }
-    }
-    
+  }
 
   async detectarRostroEnTiempoReal(descriptorReferencia: Float32Array) {
     const video = this.videoRef.nativeElement;
-    const stream = video.srcObject as MediaStream;
-
     const intervaloDeteccion = setInterval(async () => {
       if (!this.reconocimientoEnProgreso) {
         clearInterval(intervaloDeteccion);
@@ -110,13 +94,10 @@ export class ReconocimientoFacialPage implements OnInit {
 
       if (usuarioRostro) {
         const distancia = faceapi.euclideanDistance(descriptorReferencia, usuarioRostro.descriptor);
-        
         if (distancia < 0.6) {
           this.reconocimientoEnProgreso = false;
           clearInterval(intervaloDeteccion);
-
-          this.detenerVideo();  // Llama a la función para detener el video
-          const mensajeExito = `La cara coincide con ${this.nombreUsuario}.`;
+          this.detenerVideo();
           this.router.navigate(['/verificacion-confirmada']);
         } else {
           this.mostrarAlerta(
@@ -126,7 +107,7 @@ export class ReconocimientoFacialPage implements OnInit {
           );
         }
       }
-    }, 1000); // Revisa cada segundo
+    }, 1000);
   }
 
   detenerVideo() {

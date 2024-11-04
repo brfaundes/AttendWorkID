@@ -61,7 +61,14 @@ export class TrabajadoresPage implements OnInit {
   }
 
   async agregarTrabajador() {
-    if (this.validarTrabajador()) {
+    if (this.validarTrabajador() && this.validarImg()) {
+      // Verificar si el usuario ya existe
+      const usuarioExistente = await this.verificarUsuarioExistente();
+      if (usuarioExistente) {
+        this.mostrarAlerta('Error', 'Ya existe un trabajador con el mismo email o RUT.');
+        return; // Salir si el usuario ya existe
+      }
+
       if (this.selectedImage) {
         const filePath = `trabajadores/${Date.now()}_${this.selectedImage.name}`;
         const fileRef = this.storage.ref(filePath);
@@ -70,7 +77,7 @@ export class TrabajadoresPage implements OnInit {
         uploadTask.snapshotChanges()
           .pipe(finalize(() => {
             fileRef.getDownloadURL().subscribe((url) => {
-              this.trabajador.fotoUrl = url; // Guardar la URL de la foto
+              this.trabajador.fotoUrl = url;
               this.guardarTrabajador();
             });
           }))
@@ -80,6 +87,20 @@ export class TrabajadoresPage implements OnInit {
       }
     }
   }
+
+  async verificarUsuarioExistente(): Promise<boolean> {
+    return new Promise((resolve) => {
+      // Consultar la base de datos para ver si ya existe un usuario con el mismo email o RUT
+      this.database.getAll('trabajador').subscribe(trabajadores => {
+        const existe = trabajadores.some(trabajador => 
+          trabajador.email === this.trabajador.email || 
+          trabajador.rut_empleado === this.trabajador.rut_empleado
+        );
+        resolve(existe);
+      });
+    });
+  }
+
 
   async guardarTrabajador() {
     try {
@@ -198,29 +219,47 @@ export class TrabajadoresPage implements OnInit {
       console.error('Error al obtener los trabajadores:', error);
     });
   }
+  
+  validarImg(): boolean{
+        // Verificar que se haya seleccionado una imagen
+        if (!this.selectedImage) {
+          this.mostrarAlerta('Error', 'Por favor, sube una foto del trabajador.');
+          return false;
+        }
+      return true;
+  }
 
   validarTrabajador(): boolean {
     const { email, rut_empleado, nombre } = this.trabajador;
+    
+    // Verificar que todos los campos requeridos estén completos
     if (!email || !rut_empleado || !nombre) {
       this.mostrarAlerta('Error', 'Por favor, completa todos los campos.');
       return false;
     }
+    // Validación para el nombre
     const nombreValido = /^[a-zA-Z\s]+$/.test(nombre);
     if (!nombreValido) {
       this.mostrarAlerta('Error', 'El nombre solo debe contener letras y espacios.');
       return false;
     }
+
+    // Validación para el correo electrónico
     const emailValido = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(email);
     if (!emailValido) {
       this.mostrarAlerta('Error', 'Por favor, ingresa un correo electrónico válido.');
       return false;
     }
+
+    // Validación para el RUT
     if (rut_empleado.length > 10) {
       this.mostrarAlerta('Error', 'El RUT no debe tener más de 10 caracteres.');
       return false;
     }
+
     return true;
-  }
+}
+
 
   async mostrarAlerta(header: string, message: string) {
     const alert = await this.alertController.create({

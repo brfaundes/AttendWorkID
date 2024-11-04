@@ -1,6 +1,7 @@
 [
     {
-      "origin": ["http://localhost:4200", "capacitor://localhost", "ionic://localhost"],
+      "-comment": ["http://localhost:4200", "capacitor://localhost", "ionic://localhost", "https://attendworkid-fd400.firebaseapp.com"],
+      "origin": ["*"],
       "method": ["GET", "POST", "PUT", "DELETE"],
       "maxAgeSeconds": 3600,
       "responseHeader": ["Content-Type", "Authorization"]
