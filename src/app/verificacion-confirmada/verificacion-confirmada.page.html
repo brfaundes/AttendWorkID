@@ -7,7 +7,10 @@
 <ion-content class="ion-text-center">
   <div class="confirmation-container">
     <ion-icon name="checkmark-circle" class="success-icon"></ion-icon>
-    <h2>Bienvenido, {{ nombreUsuario }}!</h2>
+    <h2>Bienvenido, {{ nombre }}!</h2>
     <p class="welcome-message">La verificación ha sido exitosa.</p>
+    <ion-button color="success" expand="block" (click)="redirigirAlLogin()">Volver al Inicio</ion-button>
+
   </div>
+
 </ion-content>

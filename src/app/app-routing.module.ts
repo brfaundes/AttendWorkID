@@ -39,6 +39,10 @@ const routes: Routes = [
     path: 'verificacion-confirmada',
     loadChildren: () => import('./verificacion-confirmada/verificacion-confirmada.module').then( m => m.VerificacionConfirmadaPageModule)
   },
+  {
+    path: 'verificacion-fallida',
+    loadChildren: () => import('./verificacion-fallida/verificacion-fallida.module').then( m => m.VerificacionFallidaPageModule)
+  },
 ];
 
 @NgModule({

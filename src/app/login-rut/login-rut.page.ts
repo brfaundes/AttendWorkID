@@ -32,9 +32,12 @@ export class LoginRutPage {
         if (trabajador) {
           // Guardar la información del usuario en localStorage, incluyendo su cargo
           localStorage.setItem('user', JSON.stringify(trabajador));
+
           this.router.navigate(['/reconocimiento-facial'], 
             { queryParams: {  rut: this.rutEmpleado, 
-                              fotoUrl: trabajador.fotoUrl } });
+                              fotoUrl: trabajador.fotoUrl,
+                              nombre: trabajador.nombre,
+                              apellido: trabajador.apellido } });
 
           // Habilitar el menú
           this.menuController.enable(true);

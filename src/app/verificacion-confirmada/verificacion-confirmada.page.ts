@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router  } from '@angular/router';
 
 @Component({
   selector: 'app-verificacion-confirmada',
@@ -7,14 +7,19 @@ import { ActivatedRoute } from '@angular/router';
   styleUrls: ['./verificacion-confirmada.page.scss'],
 })
 export class VerificacionConfirmadaPage implements OnInit {
-  nombreUsuario: string = '';
+  nombre: string = '';
 
-  constructor(private route: ActivatedRoute) {}
+  constructor(private route: ActivatedRoute, private router: Router) {}
 
   ngOnInit() {
-    // Obtiene el nombre del usuario de los parámetros de la URL
+    // Obtiene el nombre del usuario de los parámetros de la URL solo una vez en ngOnInit
     this.route.queryParams.subscribe(params => {
-      this.nombreUsuario = params['nombreUsuario'] || 'Usuario';
+      this.nombre = params['nombre'];
+      
     });
+  }
+
+  redirigirAlLogin() {
+    this.router.navigate(['/login-rut']);
   }
 }

@@ -12,7 +12,8 @@ export class ReconocimientoFacialPage implements OnInit {
   @ViewChild('video', { static: false }) videoRef!: ElementRef<HTMLVideoElement>;
   rut: string = '';
   fotoUrl: string = '';
-  nombreUsuario: string = '';
+  nombre: string = '';
+  apellido: string= '';
   modelosCargados: boolean = false;
   reconocimientoEnProgreso: boolean = false;
 
@@ -24,13 +25,14 @@ export class ReconocimientoFacialPage implements OnInit {
     this.route.queryParams.subscribe(params => {
       this.rut = params['rut'];
       this.fotoUrl = params['fotoUrl'];
-      this.nombreUsuario = params['nombre'];
+      this.nombre = params['nombre'];
+      this.apellido = params['apellido']
     });
   }
 
   async ngOnInit() {
     await this.cargarModelosFaceApi();
-    this.iniciarReconocimientoFacial();
+    this.iniciarReconocimientoFacial();  // Ejecuta automáticamente la cámara y el reconocimiento facial
   }
 
   async cargarModelosFaceApi() {
@@ -41,6 +43,7 @@ export class ReconocimientoFacialPage implements OnInit {
       faceapi.nets.faceRecognitionNet.loadFromUri(MODEL_URL)
     ]);
     this.modelosCargados = true;
+    console.log('Modelos de face-api.js cargados');
   }
 
   async iniciarReconocimientoFacial() {
@@ -51,36 +54,47 @@ export class ReconocimientoFacialPage implements OnInit {
     this.reconocimientoEnProgreso = true;
     await this.iniciarVideo();
 
-    const imagenReferencia = await faceapi.fetchImage(this.fotoUrl);
-    const referenciaRostro = await faceapi
-      .detectSingleFace(imagenReferencia)
-      .withFaceLandmarks()
-      .withFaceDescriptor();
-
-    if (!referenciaRostro) {
-      this.mostrarAlerta('Error', 'No se pudo detectar el rostro de referencia', 'danger');
+    // Validar URL de la imagen
+    if (!this.fotoUrl || !this.fotoUrl.startsWith('http')) {
+      this.mostrarAlerta('Error', 'URL de imagen inválida o no disponible.', 'danger');
       return;
     }
 
-    this.detectarRostroEnTiempoReal(referenciaRostro.descriptor);
+    try {
+      const imagenReferencia = await faceapi.fetchImage(this.fotoUrl);
+      const referenciaRostro = await faceapi
+        .detectSingleFace(imagenReferencia)
+        .withFaceLandmarks()
+        .withFaceDescriptor();
+
+      if (!referenciaRostro) {
+        this.mostrarAlerta('Error', 'No se pudo detectar el rostro de referencia', 'danger');
+        return;
+      }
+
+      this.detectarRostroEnTiempoReal(referenciaRostro.descriptor);
+    } catch (error) {
+      console.error("Error al cargar la imagen de referencia:", error);
+      this.mostrarAlerta("Error", "No se pudo cargar la imagen de referencia. Verifica la URL y los permisos de acceso.", "danger");
+    }
   }
 
   async iniciarVideo() {
     const video = this.videoRef.nativeElement;
+
     try {
-      const stream = await navigator.mediaDevices.getUserMedia({
-        video: { facingMode: 'user' }
-      });
+      const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user' } });
       video.srcObject = stream;
       video.play();
     } catch (error) {
-      this.mostrarAlerta('Error', 'No se pudo acceder a la cámara.', 'danger');
-      console.error('Error al acceder a la cámara:', error);
+      this.mostrarAlerta("Error", "No se pudo acceder a la cámara.", "danger");
+      console.error("Error al acceder a la cámara:", error);
     }
   }
 
   async detectarRostroEnTiempoReal(descriptorReferencia: Float32Array) {
     const video = this.videoRef.nativeElement;
+
     const intervaloDeteccion = setInterval(async () => {
       if (!this.reconocimientoEnProgreso) {
         clearInterval(intervaloDeteccion);
@@ -94,18 +108,17 @@ export class ReconocimientoFacialPage implements OnInit {
 
       if (usuarioRostro) {
         const distancia = faceapi.euclideanDistance(descriptorReferencia, usuarioRostro.descriptor);
+        
         if (distancia < 0.6) {
           this.reconocimientoEnProgreso = false;
           clearInterval(intervaloDeteccion);
+
           this.detenerVideo();
           this.router.navigate(['/verificacion-confirmada'], {
-            queryParams: { nombreUsuario: this.nombreUsuario }})
+            queryParams: { nombre: this.nombre, apellido: this.apellido }
+          });
         } else {
-          this.mostrarAlerta(
-            'Rostro no reconocido',
-            'El rostro detectado no coincide con el usuario de referencia.',
-            'warning'
-          );
+          this.router.navigate(['/verificacion-fallida']);
         }
       }
     }, 1000);
@@ -120,10 +133,10 @@ export class ReconocimientoFacialPage implements OnInit {
     }
   }
 
-  async mostrarAlerta(titulo: string, mensaje: string, color: string) {
+  async mostrarAlerta(header: string, message: string, color: string) {
     const alert = await this.alertController.create({
-      header: titulo,
-      message: mensaje,
+      header: header,
+      message: message,
       buttons: ['OK'],
       cssClass: color,
     });

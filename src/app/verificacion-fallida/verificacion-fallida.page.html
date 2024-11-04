@@ -1,0 +1,16 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Verificación Fallida</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-text-center">
+  <div class="error-container">
+    <ion-icon name="close-circle" class="error-icon"></ion-icon>
+    <h2>Verificación Fallida</h2>
+    <p class="error-message">No se pudo verificar el rostro. Inténtalo de nuevo.</p>
+
+    <!-- Botón para regresar al login-rut -->
+    <ion-button  color="danger" expand="block" (click)="redirigirAlLogin()">Volver al Inicio</ion-button>
+  </div>
+</ion-content>
