@@ -98,7 +98,8 @@ export class ReconocimientoFacialPage implements OnInit {
           this.reconocimientoEnProgreso = false;
           clearInterval(intervaloDeteccion);
           this.detenerVideo();
-          this.router.navigate(['/verificacion-confirmada']);
+          this.router.navigate(['/verificacion-confirmada'], {
+            queryParams: { nombreUsuario: this.nombreUsuario }})
         } else {
           this.mostrarAlerta(
             'Rostro no reconocido',

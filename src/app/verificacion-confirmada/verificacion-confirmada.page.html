@@ -1,13 +1,13 @@
-<ion-header [translucent]="true">
+<ion-header>
   <ion-toolbar>
-    <ion-title>verificacion-confirmada</ion-title>
+    <ion-title>Verificación Confirmada</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">verificacion-confirmada</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-content class="ion-text-center">
+  <div class="confirmation-container">
+    <ion-icon name="checkmark-circle" class="success-icon"></ion-icon>
+    <h2>Bienvenido, {{ nombreUsuario }}!</h2>
+    <p class="welcome-message">La verificación ha sido exitosa.</p>
+  </div>
 </ion-content>
