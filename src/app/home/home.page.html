@@ -1,42 +1,22 @@
-<ion-header [translucent]="true">
-
+<ion-header>
   <ion-toolbar>
-
-
-    <ion-grid>
-      <ion-row>
-        <ion-col>
-          <ion-toolbar>
-            <ion-buttons slot="start">
-              <ion-menu-button auto-hide="false"></ion-menu-button>
-            </ion-buttons>
-          </ion-toolbar>
-        </ion-col>
-
-
-
-      </ion-row>
-    </ion-grid>
-
-
-
-
+    <ion-title>Estadísticas de Asistencia</ion-title>
   </ion-toolbar>
-  <div class="container" style="background-color: #2D3250; padding: 5px;">
-    <ion-title class=".ion-padding">Inicio</ion-title>
-  </div>
-
-
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Inicio</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-content class="ion-padding">
+  <div class="chart-container">
+    <h2>Días trabajados en el mes</h2>
+    <canvas #diasTrabajadosChart></canvas>
+  </div>
 
+  <div class="chart-container">
+    <h2>Ausencias</h2>
+    <canvas #ausenciasChart></canvas>
+  </div>
 
-
-
+  <div class="chart-container">
+    <h2>Llegadas Tarde</h2>
+    <canvas #llegadasTardeChart></canvas>
+  </div>
 </ion-content>

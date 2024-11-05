@@ -2,6 +2,7 @@ import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AlertController } from '@ionic/angular';
 import * as faceapi from 'face-api.js';
+import { EstadisticasService } from '../services/estadisticas.service';
 
 @Component({
   selector: 'app-reconocimiento-facial',
@@ -13,26 +14,27 @@ export class ReconocimientoFacialPage implements OnInit {
   rut: string = '';
   fotoUrl: string = '';
   nombre: string = '';
-  apellido: string= '';
+  apellido: string = '';
   modelosCargados: boolean = false;
   reconocimientoEnProgreso: boolean = false;
 
   constructor(
     private route: ActivatedRoute,
     private alertController: AlertController,
-    private router: Router
+    private router: Router,
+    private estadisticasService: EstadisticasService // Servicio para actualizar estadísticas
   ) {
     this.route.queryParams.subscribe(params => {
       this.rut = params['rut'];
       this.fotoUrl = params['fotoUrl'];
       this.nombre = params['nombre'];
-      this.apellido = params['apellido']
+      this.apellido = params['apellido'];
     });
   }
 
   async ngOnInit() {
     await this.cargarModelosFaceApi();
-    this.iniciarReconocimientoFacial();  // Ejecuta automáticamente la cámara y el reconocimiento facial
+    this.iniciarReconocimientoFacial(); // Ejecuta automáticamente la cámara y el reconocimiento facial
   }
 
   async cargarModelosFaceApi() {
@@ -74,8 +76,8 @@ export class ReconocimientoFacialPage implements OnInit {
 
       this.detectarRostroEnTiempoReal(referenciaRostro.descriptor);
     } catch (error) {
-      console.error("Error al cargar la imagen de referencia:", error);
-      this.mostrarAlerta("Error", "No se pudo cargar la imagen de referencia. Verifica la URL y los permisos de acceso.", "danger");
+      console.error('Error al cargar la imagen de referencia:', error);
+      this.mostrarAlerta('Error', 'No se pudo cargar la imagen de referencia. Verifica la URL y los permisos de acceso.', 'danger');
     }
   }
 
@@ -87,14 +89,13 @@ export class ReconocimientoFacialPage implements OnInit {
       video.srcObject = stream;
       video.play();
     } catch (error) {
-      this.mostrarAlerta("Error", "No se pudo acceder a la cámara.", "danger");
-      console.error("Error al acceder a la cámara:", error);
+      this.mostrarAlerta('Error', 'No se pudo acceder a la cámara.', 'danger');
+      console.error('Error al acceder a la cámara:', error);
     }
   }
 
   async detectarRostroEnTiempoReal(descriptorReferencia: Float32Array) {
     const video = this.videoRef.nativeElement;
-
     const intervaloDeteccion = setInterval(async () => {
       if (!this.reconocimientoEnProgreso) {
         clearInterval(intervaloDeteccion);
@@ -108,20 +109,28 @@ export class ReconocimientoFacialPage implements OnInit {
 
       if (usuarioRostro) {
         const distancia = faceapi.euclideanDistance(descriptorReferencia, usuarioRostro.descriptor);
-        
+
         if (distancia < 0.6) {
           this.reconocimientoEnProgreso = false;
           clearInterval(intervaloDeteccion);
-
           this.detenerVideo();
+
+          // Llamada al servicio para registrar el día trabajado
+          const nombreCompleto = `${this.nombre} ${this.apellido}`;
+          this.estadisticasService.registrarDiaTrabajado(this.rut, nombreCompleto);
+
+          // Redirección a la página de verificación confirmada
           this.router.navigate(['/verificacion-confirmada'], {
             queryParams: { nombre: this.nombre, apellido: this.apellido }
           });
         } else {
+          this.reconocimientoEnProgreso = false;
+          clearInterval(intervaloDeteccion);
+          this.detenerVideo();
           this.router.navigate(['/verificacion-fallida']);
         }
       }
-    }, 1000);
+    }, 1000); // Revisa cada segundo
   }
 
   detenerVideo() {

@@ -37,6 +37,7 @@
     "@fullcalendar/timegrid": "^6.1.15",
     "@ionic/angular": "^8.0.0",
     "@tensorflow/tfjs-core": "^4.22.0",
+    "chart.js": "^4.4.6",
     "face-api.js": "^0.22.2",
     "firebase": "^10.14.0",
     "ionicons": "^7.0.0",
