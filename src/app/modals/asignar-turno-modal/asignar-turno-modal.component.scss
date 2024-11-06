@@ -1,20 +1,35 @@
-ion-item {
-    margin-bottom: 10px;
-}
-
-ion-button {
-margin-top: 20px;
---background: #3880ff;
---border-radius: 8px;
-font-size: 16px;
-}
-
-ion-label {
-font-weight: bold;
-color: #333;
-}
-
-form {
-display: flex;
-flex-direction: column;
-}
+.animate-modal {
+    animation: zoomIn 0.3s ease-out;
+  }
+  
+  .assign-button {
+    --border-radius: 8px;
+    margin-top: 20px;
+    animation: pulse 1s infinite alternate;
+  }
+  
+  .assign-button:hover {
+    background-color: #4CAF50;
+    transform: scale(1.02);
+  }
+  
+  @keyframes zoomIn {
+    from {
+      opacity: 0;
+      transform: scale(0.8);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+  
+  @keyframes pulse {
+    from {
+      transform: scale(1);
+    }
+    to {
+      transform: scale(1.05);
+    }
+  }
+  

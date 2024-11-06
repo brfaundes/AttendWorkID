@@ -20,8 +20,12 @@
 
     <!-- Modificar Fecha del Turno -->
     <ion-item>
-      <ion-label>Fecha del Turno</ion-label>
-      <ion-datetime [(ngModel)]="selectedDate" name="date" presentation="date" required></ion-datetime>
+      <ion-label position="stacked">Fecha del turno</ion-label>
+      <ion-datetime display-format="DD/MM/YYYY" picker-format="DD/MM/YYYY" 
+                    [(ngModel)]="selectedDate" name="selectedDate" 
+                    [min]="minDate" required
+                    presentation="date">
+      </ion-datetime>
     </ion-item>
 
     <!-- Hora de Inicio -->

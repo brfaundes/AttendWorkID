@@ -1,44 +1,42 @@
 <ion-header>
-  <ion-toolbar>
-    <ion-title>Calendario</ion-title>
+  <ion-toolbar color="primary">
+    <ion-title>Calendario de Turnos</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
-  <!-- Calendario para seleccionar un día -->
-  <full-calendar [options]="calendarOptions"></full-calendar>
+<ion-content class="ion-padding">
+  <!-- Contenedor para el calendario -->
+  <div class="calendar-container">
+    <full-calendar [options]="calendarOptions"></full-calendar>
+  </div>
 
-  <!-- Si hay turnos -->
-  <div *ngIf="employeeShifts.length > 0">
+  <!-- Lista de turnos para el día seleccionado -->
+  <div *ngIf="employeeShifts.length > 0" class="shift-list">
     <ion-list>
-      <ion-list-header>Turnos para el {{ selectedDate }}:</ion-list-header>
-      <ion-button expand="full" (click)="openAssignShiftModal()">Asignar Turno</ion-button>
-      <ion-item *ngFor="let shift of employeeShifts">
+      <ion-list-header color="medium">
+        <h2>Turnos para el {{ selectedDate }}:</h2>
+      </ion-list-header>
+      <ion-button expand="full" color="secondary" (click)="openAssignShiftModal()" class="assign-button">
+        <ion-icon slot="start" name="add-circle-outline"></ion-icon>
+        Asignar Turno
+      </ion-button>
+      <ion-item *ngFor="let shift of employeeShifts" lines="full" class="shift-item">
         <ion-label>
           <h2>Empleado: {{ shift.employeeName }}</h2>
           <p>De {{ shift.startTime }} a {{ shift.endTime }}</p>
         </ion-label>
-        <!-- Ícono de lápiz para modificar -->
-        <ion-icon 
-          name="create" 
-          slot="end" 
-          class="edit-icon" 
-          (click)="openEditShiftModal(shift)">
-        </ion-icon>
-        <!-- Icono de basurero para eliminar el turno -->
-        <ion-icon 
-          name="trash" 
-          slot="end" 
-          class="trash-icon" 
-          (click)="deleteShift(shift)">
-        </ion-icon>
+        <ion-icon name="create" slot="end" class="edit-icon" color="tertiary" (click)="openEditShiftModal(shift)"></ion-icon>
+        <ion-icon name="trash" slot="end" class="trash-icon" color="danger" (click)="deleteShift(shift)"></ion-icon>
       </ion-item>
     </ion-list>
   </div>
 
-  <!-- Si no hay turnos -->
-  <div *ngIf="employeeShifts.length === 0">
+  <!-- Mensaje si no hay turnos programados -->
+  <div *ngIf="employeeShifts.length === 0" class="no-shifts">
     <p>No hay turnos programados para el día {{ selectedDate }}.</p>
-    <ion-button expand="full" (click)="openAssignShiftModal()">Asignar Turno</ion-button>
+    <ion-button expand="full" color="secondary" (click)="openAssignShiftModal()" class="assign-button">
+      <ion-icon slot="start" name="add-circle-outline"></ion-icon>
+      Asignar Turno
+    </ion-button>
   </div>
 </ion-content>

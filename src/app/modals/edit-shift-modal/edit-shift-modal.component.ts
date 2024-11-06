@@ -14,12 +14,27 @@ export class EditShiftModalComponent {
   startTime: string = '';
   endTime: string = '';
   selectedDate: string = '';
+  minDate: string = '';
 
   constructor(private modalController: ModalController, private databaseService: DatabaseService) {}
 
   ngOnInit() {
     this.loadEmployees();
     this.populateFields();
+    this.setMinDate();
+  }
+
+  
+  setMinDate() {
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = (now.getMonth() + 1).toString().padStart(2, '0');
+    const day = now.getDate().toString().padStart(2, '0');
+    const hours = now.getHours().toString().padStart(2, '0');
+    const minutes = now.getMinutes().toString().padStart(2, '0');
+
+    // Configura minDate con la fecha y hora actuales en formato ISO completo
+    this.minDate = `${year}-${month}-${day}T${hours}:${minutes}`;
   }
 
   // Cargar empleados
@@ -75,7 +90,13 @@ export class EditShiftModalComponent {
     };
   
     console.log('Datos a actualizar:', updatedShiftData);
-  
+    
+    if (formattedStartTime >= formattedEndTime) {
+      console.error('La hora de inicio debe ser menor a la hora de fin');
+      alert('La hora de inicio debe ser menor a la hora de fin');
+      return;
+    }
+
     // Llama a Firebase enviando el ID para actualizar
     this.databaseService.updateShift(this.shiftData.id, updatedShiftData)
       .then(() => {

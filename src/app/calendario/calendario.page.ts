@@ -26,6 +26,7 @@ export class CalendarioPage implements OnInit {
 
   ngOnInit() {
     this.initializeCalendar();
+    
   }
 
   // Inicializamos el calendario
