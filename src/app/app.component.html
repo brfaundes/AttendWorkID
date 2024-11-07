@@ -1,31 +1,25 @@
 <ion-app>
   <ion-split-pane contentId="main-content">
-
-<!-- menu lateral -->
-    <ion-menu  contentId="main-content" type="overlay">
-      <ion-content >
-        <ion-list id="inbox-list" >
+    <ion-menu contentId="main-content" type="overlay">
+      <ion-content>
+        <ion-list id="inbox-list">
           <ion-list-header>AttendWorkID</ion-list-header>
 
+          <ion-list>
+            <ion-item lines="none">
+              <ion-thumbnail slot="start">
+                <ion-avatar>
+                  <img alt="Foto de perfil" [src]="trabajador?.fotoUrl || 'assets/default-avatar.png'" />
+                </ion-avatar>
+              </ion-thumbnail>
+              <ion-label>
+                <h2>{{ trabajador?.nombre }} {{ trabajador?.apellido }}</h2>
+                <p>{{ trabajador?.cargo }}</p>
+              </ion-label>
+            </ion-item>
+          </ion-list>
 
-              <ion-list>          
-                <ion-item lines="none">
-                  <ion-thumbnail slot="start">
-                    <!-- ciruclo con imagen -->
-                    <ion-avatar>
-                    <img alt="Silhouette of mountains" src="https://ionicframework.com/docs/img/demos/thumbnail.svg" />
-                    </ion-avatar>
-
-                  </ion-thumbnail>
-                  <ion-label>
-                    <h2>Nombre admin</h2>
-                    <p>admin</p>
-                  </ion-label>
-                </ion-item>
-              </ion-list>
-
-              
-          <ion-menu-toggle auto-hide="false" *ngFor="let p of appPages; let i = index">
+          <ion-menu-toggle auto-hide="false" *ngFor="let p of appPages">
             <ion-item routerDirection="root" [routerLink]="[p.url]" lines="none" detail="false" routerLinkActive="selected">
               <ion-icon aria-hidden="true" slot="start" [ios]="p.icon + '-outline'" [md]="p.icon + '-sharp'"></ion-icon>
               <ion-label>{{ p.title }}</ion-label>
@@ -33,22 +27,14 @@
           </ion-menu-toggle>
         </ion-list>
 
-
-           
-        <ion-menu-toggle auto-hide="false" *ngFor="let p of labels; let i = index">
-          <ion-item routerDirection="root" [routerLink]="[p.url]" lines="none" detail="false" routerLinkActive="selected">
+        <ion-menu-toggle auto-hide="false" *ngFor="let p of labels">
+          <ion-item (click)="logout()" routerDirection="root" [routerLink]="[p.url]" lines="none" detail="false" routerLinkActive="selected">
             <ion-icon aria-hidden="true" slot="start" [ios]="p.icon + '-outline'" [md]="p.icon + '-sharp'"></ion-icon>
             <ion-label>{{ p.title }}</ion-label>
           </ion-item>
         </ion-menu-toggle>
-
-
       </ion-content>
     </ion-menu>
     <ion-router-outlet id="main-content"></ion-router-outlet>
-    
   </ion-split-pane>
-
-
-
 </ion-app>

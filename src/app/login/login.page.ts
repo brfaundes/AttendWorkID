@@ -1,9 +1,7 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { DatabaseService } from '../services/database.service';
 import { LoginService } from '../services/login.service';
-import { AlertController } from '@ionic/angular';
-import { MenuController } from '@ionic/angular';
+import { AlertController, MenuController } from '@ionic/angular';
 
 @Component({
   selector: 'app-login',
@@ -11,8 +9,8 @@ import { MenuController } from '@ionic/angular';
   styleUrls: ['./login.page.scss'],
 })
 export class LoginPage {
-  rutEmpleado: string = ''; // RUT del usuario para el login
-  contrasena: string = '';  // Contraseña del usuario
+  rutEmpleado: string = '';
+  contrasena: string = '';
 
   constructor(
     private router: Router,
@@ -27,25 +25,19 @@ export class LoginPage {
 
   // Método para manejar el login
   login() {
+    console.log('Intentando iniciar sesión...');
+
     this.loginService.loginWithRutAndPassword(this.rutEmpleado, this.contrasena).subscribe(
-      (trabajadores: any[]) => {
-        const trabajador = trabajadores[0]; // Se espera que haya un solo trabajador que coincida
-
+      (trabajador) => {
+        console.log('Resultado del login:', trabajador);
         if (trabajador) {
-          // Guardar la información del usuario en localStorage, incluyendo su cargo
           localStorage.setItem('user', JSON.stringify(trabajador));
-
-          // Verificar si el usuario es administrador
-          if (trabajador.cargo === 'administrador') {
-            // Si es administrador, redirigir a la página de administración completa
-            this.router.navigate(['/trabajadores']); // Aquí puedes ajustar la ruta si es diferente
-          } else {
-            // Si no es administrador, redirigir a una vista con acceso limitado
-            this.router.navigate(['/trabajadores']); // También puedes usar una página limitada si tienes una
-          }
-
-          // Habilitar el menú
           this.menuController.enable(true);
+          if (trabajador.cargo === 'administrador') {
+            this.router.navigate(['/home']);
+          } else {
+            this.router.navigate(['/trabajadores']);
+          }
         } else {
           this.showAlert('Error', 'RUT o contraseña incorrectos.');
         }
@@ -56,6 +48,8 @@ export class LoginPage {
       }
     );
   }
+
+ 
 
   // Mostrar una alerta en caso de error
   async showAlert(header: string, message: string) {
