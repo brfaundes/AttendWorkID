@@ -77,7 +77,7 @@
         <!-- Campo para cargar la foto al agregar trabajador -->
         <ion-item>
           <ion-label position="stacked">Foto</ion-label>
-          <input type="file" (change)="onImageSelected($event)" />
+          <input type="file" (change)="onImageSelected($event)" accept="image/*" />
         </ion-item>
       </ion-content>
 
@@ -168,7 +168,7 @@
         <!-- Campo para cambiar la foto al editar trabajador -->
         <ion-item>
           <ion-label position="stacked">Cambiar Foto</ion-label>
-          <input type="file" (change)="onEditImageSelected($event)" />
+          <input type="file" (change)="onEditImageSelected($event)" accept="image/*"/>
         </ion-item>
       </ion-content>
 

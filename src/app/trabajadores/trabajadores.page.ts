@@ -123,20 +123,28 @@ export class TrabajadoresPage implements OnInit {
     if (this.validarTrabajador() && this.trabajadorEditandoId) {
       try {
         if (this.selectedEditImage) {
+          // Paso 1: Eliminar la imagen anterior si existe
+          if (this.trabajador.fotoUrl) {
+            const fileRef = this.storage.refFromURL(this.trabajador.fotoUrl);
+            await fileRef.delete().toPromise();
+            console.log('Foto anterior eliminada del storage.');
+          }
+  
+          // Paso 2: Subir la nueva imagen
           const filePath = `trabajadores/${Date.now()}_${this.selectedEditImage.name}`;
           const fileRef = this.storage.ref(filePath);
           const uploadTask = this.storage.upload(filePath, this.selectedEditImage);
-
+  
           uploadTask.snapshotChanges()
             .pipe(finalize(() => {
               fileRef.getDownloadURL().subscribe((url) => {
-                this.trabajador.fotoUrl = url; // Actualizar la URL de la foto
+                this.trabajador.fotoUrl = url; // Actualizar la URL de la nueva foto
                 this.actualizarTrabajador();
               });
             }))
             .subscribe();
         } else {
-          // Si no hay nueva imagen, actualizar solo los demás datos
+          // Si no se selecciona una nueva imagen, actualizar solo los demás datos
           this.actualizarTrabajador();
         }
       } catch (err) {
