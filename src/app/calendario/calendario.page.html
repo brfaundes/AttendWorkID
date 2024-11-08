@@ -22,7 +22,7 @@
       </ion-button>
       <ion-item *ngFor="let shift of employeeShifts" lines="full" class="shift-item">
         <ion-label>
-          <h2>Empleado: {{ shift.employeeName }}</h2>
+          <h2>Empleado: {{ shift.employeeName }} {{ shift.employeeLastName }}</h2>
           <p>De {{ shift.startTime }} a {{ shift.endTime }}</p>
         </ion-label>
         <ion-icon name="create" slot="end" class="edit-icon" color="tertiary" (click)="openEditShiftModal(shift)"></ion-icon>

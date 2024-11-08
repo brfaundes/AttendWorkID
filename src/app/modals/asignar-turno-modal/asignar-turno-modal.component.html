@@ -15,7 +15,7 @@
           <ion-label position="stacked">Trabajador</ion-label>
           <ion-select [(ngModel)]="selectedEmployee" name="employee" required interface="popover">
             <ion-select-option *ngFor="let employee of employees" [value]="employee">
-              {{ employee.nombre }}
+              {{ employee.nombre }} {{ employee.apellido }}
             </ion-select-option>
           </ion-select>
         </ion-item>

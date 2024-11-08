@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { Observable, of  } from 'rxjs';
+import { switchMap,map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root',
 })
-export class DatabaseService {
+export class CalendarService {
   constructor(private firestore: AngularFirestore) {}
 
   // Método para crear un documento en una colección
@@ -18,6 +18,7 @@ export class DatabaseService {
   getAllShifts(): Observable<any[]> {
     return this.firestore.collection('shifts').valueChanges();
   }
+  
 
   // Obtener turnos filtrados por fecha
   getShiftsByDate(date: string): Observable<any[]> {

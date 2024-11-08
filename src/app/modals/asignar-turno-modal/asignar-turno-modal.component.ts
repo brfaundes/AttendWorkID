@@ -1,9 +1,10 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
-import { DatabaseService } from '../../services/calendar.service';
+import { CalendarService } from '../../services/calendar.service';
 
 interface Employee {
   nombre: string;
+  apellido: string;
   rut_empleado: string;
   // Otros campos si son necesarios
 }
@@ -21,7 +22,7 @@ export class AsignarTurnoModalComponent implements OnInit {
   endTime: string = '';
   minDate: string = '';
 
-  constructor(private modalController: ModalController, private databaseService: DatabaseService) {}
+  constructor(private modalController: ModalController, private calendarService: CalendarService) {}
 
   ngOnInit() {
     this.loadEmployees();
@@ -41,7 +42,7 @@ export class AsignarTurnoModalComponent implements OnInit {
 
   // Cargar empleados
   loadEmployees() {
-    this.databaseService.getEmployees().subscribe((data: Employee[]) => {
+    this.calendarService.getEmployees().subscribe((data: Employee[]) => {
       this.employees = data;
     });
   }
@@ -71,6 +72,7 @@ export class AsignarTurnoModalComponent implements OnInit {
     const shifts = this.selectedDates.map(date => ({
       employeeID: this.selectedEmployee!.rut_empleado,
       employeeName: this.selectedEmployee!.nombre,
+      employeeLastName: this.selectedEmployee!.apellido,
       date: date.split('T')[0], // Almacenar solo la fecha
       startTime: formattedStartTime,
       endTime: formattedEndTime,
@@ -81,7 +83,7 @@ export class AsignarTurnoModalComponent implements OnInit {
     // Guardar cada turno en la base de datos
     try {
       for (const shift of shifts) {
-        await this.databaseService.create('shifts', shift);
+        await this.calendarService.create('shifts', shift);
       }
       console.log('Turnos asignados correctamente');
       this.closeModal(); // Cierra el modal al terminar

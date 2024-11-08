@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { ModalController } from '@ionic/angular';
-import { DatabaseService } from '../../services/calendar.service';
+import { CalendarService } from '../../services/calendar.service';
 
 @Component({
   selector: 'app-edit-shift-modal',
@@ -16,7 +16,7 @@ export class EditShiftModalComponent {
   selectedDate: string = '';
   minDate: string = '';
 
-  constructor(private modalController: ModalController, private databaseService: DatabaseService) {}
+  constructor(private modalController: ModalController, private calendarService: CalendarService) {}
 
   ngOnInit() {
     this.loadEmployees();
@@ -39,7 +39,7 @@ export class EditShiftModalComponent {
 
   // Cargar empleados
   loadEmployees() {
-    this.databaseService.getEmployees().subscribe((data: any[]) => {
+    this.calendarService.getEmployees().subscribe((data: any[]) => {
       this.employees = data;
 
       // Asignar el empleado actual
@@ -84,6 +84,7 @@ export class EditShiftModalComponent {
     const updatedShiftData = {
       employeeID: this.selectedEmployee.rut_empleado,
       employeeName: this.selectedEmployee.nombre,
+      emplyeeLastName: this.selectedEmployee.apellido,
       date: formattedDate, // Solo la fecha
       startTime: formattedStartTime, // Solo la hora
       endTime: formattedEndTime,     // Solo la hora
@@ -98,7 +99,7 @@ export class EditShiftModalComponent {
     }
 
     // Llama a Firebase enviando el ID para actualizar
-    this.databaseService.updateShift(this.shiftData.id, updatedShiftData)
+    this.calendarService.updateShift(this.shiftData.id, updatedShiftData)
       .then(() => {
         console.log('Turno actualizado correctamente');
         this.closeModal();

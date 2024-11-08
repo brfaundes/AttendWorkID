@@ -3,9 +3,10 @@ import { CalendarOptions } from '@fullcalendar/core';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
-import { DatabaseService } from '../services/calendar.service';
-import { ModalController } from '@ionic/angular'; // Importar el modal controller
-import { AsignarTurnoModalComponent } from '../modals/asignar-turno-modal/asignar-turno-modal.component'; // Componente modal
+import esLocale from '@fullcalendar/core/locales/es'; // Importa el idioma español
+import { CalendarService } from '../services/calendar.service';
+import { ModalController } from '@ionic/angular';
+import { AsignarTurnoModalComponent } from '../modals/asignar-turno-modal/asignar-turno-modal.component';
 import { EditShiftModalComponent } from '../modals/edit-shift-modal/edit-shift-modal.component';
 
 @Component({
@@ -16,20 +17,19 @@ import { EditShiftModalComponent } from '../modals/edit-shift-modal/edit-shift-m
 export class CalendarioPage implements OnInit {
   calendarOptions!: CalendarOptions;
   employeeShifts: any[] = [];
-  selectedDate: string = ''; // Fecha sqeleccionada
+  selectedDate: string = ''; // Fecha seleccionada
   showAssignButton: boolean = false; // Mostrar botón de asignación de turno
 
   constructor(
-    private databaseService: DatabaseService,
-    private modalController: ModalController // Modal controller para abrir el modal
+    private calendarService: CalendarService,
+    private modalController: ModalController
   ) {}
 
   ngOnInit() {
     this.initializeCalendar();
-    
+    this.loadShiftEvents(); // Cargar los eventos de los turnos en el calendario
   }
 
-  // Inicializamos el calendario
   initializeCalendar() {
     this.calendarOptions = {
       plugins: [dayGridPlugin, timeGridPlugin, interactionPlugin],
@@ -42,43 +42,55 @@ export class CalendarioPage implements OnInit {
       dateClick: this.handleDateClick.bind(this),
       selectable: true,
       editable: false,
+      locale: esLocale, // Configura el idioma en español
+      events: [], // Inicializamos los eventos vacíos y los cargamos después
     };
   }
 
-  // Método para manejar el clic en un día del calendario
-  handleDateClick(info: any) {
-    this.selectedDate = info.dateStr; // Guardamos la fecha seleccionada
-    this.getShiftsByDate(this.selectedDate); // Obtener los turnos de la fecha seleccionada
+  // Carga los turnos como eventos en el calendario para mostrarlos en color verde
+  loadShiftEvents() {
+    this.calendarService.getAllShifts().subscribe((shifts: any[]) => {
+      const events = shifts.map(shift => ({
+        title: `${shift.employeeName} ${shift.employeeLastName}`, // Nombre del trabajador
+        start: shift.date,              // Fecha del turno
+        backgroundColor: 'green',       // Color verde para indicar que hay un turno
+        borderColor: 'green',
+        allDay: true                    // Evento de todo el día
+      }));
+
+      // Asignamos los eventos al calendario
+      this.calendarOptions.events = events;
+    });
   }
 
-  // Obtener los turnos de la fecha seleccionada
+  handleDateClick(info: any) {
+    this.selectedDate = info.dateStr;
+    this.getShiftsByDate(this.selectedDate);
+  }
+
   getShiftsByDate(date: string) {
-    this.databaseService.getShiftsByDate(date).subscribe((shifts: any[]) => {
+    this.calendarService.getShiftsByDate(date).subscribe((shifts: any[]) => {
       this.employeeShifts = shifts;
       console.log('Turnos para la fecha seleccionada: ', this.employeeShifts);
-
-      // Si no hay turnos, mostramos el botón para asignar un turno
       this.showAssignButton = this.employeeShifts.length === 0;
     });
   }
 
-  // Método para abrir el modal para asignar un turno
   async openAssignShiftModal() {
     const modal = await this.modalController.create({
       component: AsignarTurnoModalComponent,
-      componentProps: { selectedDate: this.selectedDate }, // Pasamos la fecha seleccionada al modal
+      componentProps: { selectedDate: this.selectedDate },
     });
     return await modal.present();
   }
 
-  // Método para eliminar un turno
   deleteShift(shift: any) {
     if (confirm('¿Estás seguro de que quieres eliminar este turno?')) {
       if (shift.id) {
-        this.databaseService.deleteShift(shift.id).then(() => {
+        this.calendarService.deleteShift(shift.id).then(() => {
           console.log('Turno eliminado');
-          // Actualizar la lista de turnos después de eliminar
           this.getShiftsByDate(this.selectedDate);
+          this.loadShiftEvents(); // Recargar eventos para reflejar la eliminación
         }).catch(error => {
           console.error('Error al eliminar el turno:', error);
         });
@@ -88,15 +100,15 @@ export class CalendarioPage implements OnInit {
     }
   }
   
-  // Método para editar un turno
   async openEditShiftModal(shift: any) {
     const modal = await this.modalController.create({
       component: EditShiftModalComponent,
       componentProps: {
         shiftData: {
-          id: shift.id,  // Asegúrate de que este id esté presente
+          id: shift.id,
           employeeID: shift.employeeID,
           employeeName: shift.employeeName,
+          employeeLastName: shift.employeeLastName,
           date: shift.date,
           startTime: shift.startTime,
           endTime: shift.endTime,
