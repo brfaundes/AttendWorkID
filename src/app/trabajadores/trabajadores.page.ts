@@ -282,16 +282,39 @@ export class TrabajadoresPage implements OnInit {
     }
   }
 
-  eliminarTrabajador(id: string) {
-    this.database.delete('trabajador', id).then(() => {
-      console.log('Trabajador eliminado');
-      this.actualizarListaTrabajadores();
-    }).catch(err => {
-      console.log('Error al eliminar trabajador:', err);
-    });
+
+  eliminarTrabajador(id: string, fotoUrl: string) {
+    // Paso 1: Eliminar la foto de Firebase Storage
+    if (fotoUrl) {
+      const fileRef = this.storage.refFromURL(fotoUrl); // Obtener la referencia del archivo en Storage usando la URL de la foto
+      fileRef.delete().pipe(
+        finalize(() => {
+          console.log('Foto eliminada del storage.');
+          // Paso 2: Después de eliminar la foto, elimina el documento del Firestore
+          this.database.delete('trabajador', id).then(() => {
+            console.log('Trabajador eliminado de Firestore.');
+            this.actualizarListaTrabajadores(); // Actualiza la lista después de eliminar
+          }).catch(err => {
+            console.error('Error al eliminar trabajador en Firestore:', err);
+          });
+        })
+      ).subscribe({
+        error: (err) => {
+          console.error('Error al eliminar la foto del storage:', err);
+        }
+      });
+    } else {
+      // Si no hay foto, solo elimina el documento del Firestore
+      this.database.delete('trabajador', id).then(() => {
+        console.log('Trabajador eliminado de Firestore.');
+        this.actualizarListaTrabajadores(); // Actualiza la lista después de eliminar
+      }).catch(err => {
+        console.error('Error al eliminar trabajador en Firestore:', err);
+      });
+    }
   }
 
-  async confirmarEliminarTrabajador(id: string) {
+  async confirmarEliminarTrabajador(id: string, fotoUrl: string) {
     const alert = await this.alertController.create({
       header: 'Confirmar eliminación',
       message: '¿Estás seguro de que deseas eliminar este trabajador?',
@@ -306,7 +329,7 @@ export class TrabajadoresPage implements OnInit {
         {
           text: 'Eliminar',
           handler: () => {
-            this.eliminarTrabajador(id);
+            this.eliminarTrabajador(id, fotoUrl);
           }
         }
       ]

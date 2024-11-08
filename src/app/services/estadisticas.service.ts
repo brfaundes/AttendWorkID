@@ -10,42 +10,67 @@ export class EstadisticasService {
   constructor(private firestore: AngularFirestore) {}
 
   /**
-   * Incrementa el contador de `diasTrabajados` para un empleado en el mes actual.
+   * Registra el día trabajado y verifica si el empleado llegó tarde.
    * @param rut_empleado - RUT único del empleado
    * @param nombreCompleto - Nombre completo del empleado
+   * @param horaActual - Hora de verificación en formato "HH:mm"
    */
-  async registrarDiaTrabajado(rut_empleado: string, nombreCompleto: string) {
+  async registrarDiaTrabajado(rut_empleado: string, nombreCompleto: string, horaActual: string) {
     const fechaActual = new Date();
     const mesActual = `${fechaActual.getFullYear()}-${('0' + (fechaActual.getMonth() + 1)).slice(-2)}`;
+    const fechaString = fechaActual.toLocaleDateString('en-CA'); // Formato YYYY-MM-DD
 
     // Referencia al documento específico dentro de la colección 'estadisticas_asistencia'
     const estadisticaDoc = this.firestore.doc(`estadisticas_asistencia/${rut_empleado}_${mesActual}`);
+    const turnoRef = this.firestore.collection('shifts', ref =>
+      ref.where('employeeID', '==', rut_empleado).where('date', '==', fechaString)
+    );
 
     try {
-      // Realiza la consulta del documento
+      console.log(`Buscando turno para empleadoID: ${rut_empleado} en fecha: ${fechaString}`);
+      const turnoSnapshot = await turnoRef.get().toPromise();
+
+      if (!turnoSnapshot || turnoSnapshot.empty) {
+        console.log('No se encontró turno para hoy');
+        return;
+      }
+
+      const turnoData = turnoSnapshot.docs[0].data() as { startTime: string };
+      const startTime = turnoData.startTime;
+
+      // Convertir horas a minutos para comparar
+      const [startHour, startMinute] = startTime.split(':').map(Number);
+      const [currentHour, currentMinute] = horaActual.split(':').map(Number);
+      const startInMinutes = startHour * 60 + startMinute;
+      const currentInMinutes = currentHour * 60 + currentMinute;
+
+      const llegoTarde = currentInMinutes > startInMinutes;
+
+      console.log(`Hora inicio turno: ${startTime}, Hora actual: ${horaActual}`);
+      console.log(`Minutos de inicio: ${startInMinutes}, Minutos actuales: ${currentInMinutes}`);
+      console.log(`¿Llego tarde? ${llegoTarde}`);
+
       const estadisticaSnap = await estadisticaDoc.get().toPromise();
 
-      // Verifica si el snapshot es válido antes de continuar
       if (estadisticaSnap && estadisticaSnap.exists) {
-        // Si el documento existe, incrementamos `diasTrabajados`
         await estadisticaDoc.update({
-          diasTrabajados: firebase.firestore.FieldValue.increment(1)
+          diasTrabajados: firebase.firestore.FieldValue.increment(1),
+          ...(llegoTarde ? { llegadasTarde: firebase.firestore.FieldValue.increment(1) } : {})
         });
       } else {
-        // Si el documento no existe, lo creamos con los valores iniciales
         await estadisticaDoc.set({
           rut_empleado,
           nombreCompleto,
           mes: mesActual,
           diasTrabajados: 1,
           ausencias: 0,
-          llegadasTarde: 0
+          llegadasTarde: llegoTarde ? 1 : 0
         });
       }
 
-      console.log('Día trabajado registrado con éxito');
+      console.log('Día trabajado y verificación de atraso registrados con éxito');
     } catch (error) {
-      console.error('Error al registrar el día trabajado:', error);
+      console.error('Error al registrar el día trabajado y verificar atraso:', error);
     }
   }
 
@@ -57,7 +82,6 @@ export class EstadisticasService {
     const fechaActual = new Date();
     const mesActual = `${fechaActual.getFullYear()}-${('0' + (fechaActual.getMonth() + 1)).slice(-2)}`;
 
-    // Filtramos solo los registros del mes actual
     const estadisticasRef = this.firestore.collection('estadisticas_asistencia', ref => 
       ref.where('mes', '==', mesActual)
     );

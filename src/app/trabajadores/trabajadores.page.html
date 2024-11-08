@@ -111,7 +111,7 @@
         </ion-button>
         
         <!-- Botón para eliminar trabajador (solo visible para administradores) -->
-        <ion-button *ngIf="isAdmin && trabajador.id" shape="round" class="botonEliminar" (click)="confirmarEliminarTrabajador(trabajador.id!)">
+        <ion-button *ngIf="isAdmin && trabajador.id" shape="round" class="botonEliminar" (click)="confirmarEliminarTrabajador(trabajador.id!, trabajador.fotoUrl!)">
           <ion-icon slot="icon-only" name="trash-bin"></ion-icon>
         </ion-button>
       </ion-item>

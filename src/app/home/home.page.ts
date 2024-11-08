@@ -11,8 +11,6 @@ Chart.register(...registerables);
 })
 export class HomePage implements OnInit {
   @ViewChild('diasTrabajadosChart', { static: true }) diasTrabajadosChartRef!: ElementRef;
-  @ViewChild('ausenciasChart', { static: true }) ausenciasChartRef!: ElementRef;
-  @ViewChild('llegadasTardeChart', { static: true }) llegadasTardeChartRef!: ElementRef;
 
   diasTrabajadosChart: Chart | undefined;
 
@@ -27,17 +25,19 @@ export class HomePage implements OnInit {
     this.estadisticasService.getEstadisticasMensuales().subscribe((data) => {
       const trabajadores = data.map(d => d.nombreCompleto || 'Sin nombre'); // Usar nombre del trabajador
       const diasTrabajados = data.map(d => d.diasTrabajados || 0);          // Días trabajados de cada trabajador
+      const llegadasTarde = data.map(d => d.llegadasTarde || 0);            // Días de llegadas tarde de cada trabajador
 
       // Cargar o actualizar el gráfico de Días Trabajados con los datos obtenidos
-      this.updateDiasTrabajadosChart(trabajadores, diasTrabajados);
+      this.updateDiasTrabajadosChart(trabajadores, diasTrabajados, llegadasTarde);
     });
   }
 
-  updateDiasTrabajadosChart(labels: string[], data: number[]) {
+  updateDiasTrabajadosChart(labels: string[], diasTrabajados: number[], llegadasTarde: number[]) {
     if (this.diasTrabajadosChart) {
       // Si el gráfico ya existe, actualiza los datos y etiquetas
       this.diasTrabajadosChart.data.labels = labels;
-      this.diasTrabajadosChart.data.datasets[0].data = data;
+      this.diasTrabajadosChart.data.datasets[0].data = diasTrabajados;
+      this.diasTrabajadosChart.data.datasets[1].data = llegadasTarde;
       this.diasTrabajadosChart.update();
     } else {
       // Si no existe, crea el gráfico
@@ -48,9 +48,16 @@ export class HomePage implements OnInit {
           datasets: [
             {
               label: 'Días Trabajados',
-              data,
+              data: diasTrabajados,
               backgroundColor: 'rgba(54, 162, 235, 0.5)',
               borderColor: 'rgba(54, 162, 235, 1)',
+              borderWidth: 1,
+            },
+            {
+              label: 'Atrasos',
+              data: llegadasTarde,
+              backgroundColor: 'rgba(255, 99, 132, 0.5)', // Rojo para llegadas tarde
+              borderColor: 'rgba(255, 99, 132, 1)',
               borderWidth: 1,
             },
           ],

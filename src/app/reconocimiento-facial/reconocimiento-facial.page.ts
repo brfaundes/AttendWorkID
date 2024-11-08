@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { AlertController } from '@ionic/angular';
 import * as faceapi from 'face-api.js';
 import { EstadisticasService } from '../services/estadisticas.service';
+import { formatDate } from '@angular/common';
 
 @Component({
   selector: 'app-reconocimiento-facial',
@@ -101,27 +102,35 @@ export class ReconocimientoFacialPage implements OnInit {
         clearInterval(intervaloDeteccion);
         return;
       }
-
+  
       const usuarioRostro = await faceapi
         .detectSingleFace(video)
         .withFaceLandmarks()
         .withFaceDescriptor();
-
+  
       if (usuarioRostro) {
         const distancia = faceapi.euclideanDistance(descriptorReferencia, usuarioRostro.descriptor);
-
+  
         if (distancia < 0.6) {
           this.reconocimientoEnProgreso = false;
           clearInterval(intervaloDeteccion);
           this.detenerVideo();
-
-          // Llamada al servicio para registrar el día trabajado
+  
           const nombreCompleto = `${this.nombre} ${this.apellido}`;
-          this.estadisticasService.registrarDiaTrabajado(this.rut, nombreCompleto);
-
+  
+          // Obtener la hora actual en formato "HH:mm"
+          const ahora = new Date();
+          const horaActual = ahora.toLocaleTimeString('en-GB', {
+            hour: '2-digit',
+            minute: '2-digit',
+            hour12: false,
+          });
+  
+          this.estadisticasService.registrarDiaTrabajado(this.rut, nombreCompleto, horaActual);
+  
           // Redirección a la página de verificación confirmada
           this.router.navigate(['/verificacion-confirmada'], {
-            queryParams: { nombre: this.nombre, apellido: this.apellido }
+            queryParams: { nombre: this.nombre, apellido: this.apellido },
           });
         } else {
           this.reconocimientoEnProgreso = false;
@@ -130,7 +139,7 @@ export class ReconocimientoFacialPage implements OnInit {
           this.router.navigate(['/verificacion-fallida']);
         }
       }
-    }, 1000); // Revisa cada segundo
+    }, 100); // Revisa cada segundo
   }
 
   detenerVideo() {

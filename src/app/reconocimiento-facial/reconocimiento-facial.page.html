@@ -6,7 +6,8 @@
 
 <ion-content fullscreen="true" class="camera-content">
   <!-- Contenedor de video en pantalla completa -->
-  <div class="video-container">
+  <div style="position: relative;">
     <video #video autoplay muted></video>
+    <canvas #overlayCanvas style="position: absolute; top: 0; left: 0;"></canvas>
   </div>
 </ion-content>
