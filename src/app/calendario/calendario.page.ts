@@ -40,6 +40,7 @@ export class CalendarioPage implements OnInit {
         right: 'dayGridMonth,timeGridWeek,timeGridDay',
       },
       dateClick: this.handleDateClick.bind(this),
+      eventClick: this.handleEventClick.bind(this), // Llama a handleEventClick al hacer clic en un evento
       selectable: true,
       editable: false,
       locale: esLocale, // Configura el idioma en español
@@ -55,7 +56,8 @@ export class CalendarioPage implements OnInit {
         start: shift.date,              // Fecha del turno
         backgroundColor: 'green',       // Color verde para indicar que hay un turno
         borderColor: 'green',
-        allDay: true                    // Evento de todo el día
+        allDay: true,                   // Evento de todo el día
+        extendedProps: { shiftId: shift.id, date: shift.date } // Propiedades adicionales
       }));
 
       // Asignamos los eventos al calendario
@@ -63,11 +65,23 @@ export class CalendarioPage implements OnInit {
     });
   }
 
+  // Maneja el clic en la fecha
   handleDateClick(info: any) {
     this.selectedDate = info.dateStr;
     this.getShiftsByDate(this.selectedDate);
   }
 
+  // Maneja el clic en un evento (nombre del trabajador)
+  handleEventClick(info: any) {
+    const shiftDate = info.event.extendedProps.date; // Fecha del turno
+    this.selectedDate = shiftDate;
+
+    // Obtiene los turnos para la fecha específica
+    this.getShiftsByDate(shiftDate);
+    console.log(`Clic en el evento para ver los turnos de la fecha: ${shiftDate}`);
+  }
+
+  // Obtener los turnos de la fecha seleccionada
   getShiftsByDate(date: string) {
     this.calendarService.getShiftsByDate(date).subscribe((shifts: any[]) => {
       this.employeeShifts = shifts;
@@ -76,6 +90,7 @@ export class CalendarioPage implements OnInit {
     });
   }
 
+  // Método para abrir el modal para asignar un turno
   async openAssignShiftModal() {
     const modal = await this.modalController.create({
       component: AsignarTurnoModalComponent,
@@ -84,6 +99,7 @@ export class CalendarioPage implements OnInit {
     return await modal.present();
   }
 
+  // Método para eliminar un turno
   deleteShift(shift: any) {
     if (confirm('¿Estás seguro de que quieres eliminar este turno?')) {
       if (shift.id) {
@@ -99,7 +115,8 @@ export class CalendarioPage implements OnInit {
       }
     }
   }
-  
+
+  // Método para editar un turno
   async openEditShiftModal(shift: any) {
     const modal = await this.modalController.create({
       component: EditShiftModalComponent,
