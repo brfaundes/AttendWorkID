@@ -9,6 +9,12 @@ import { switchMap,map } from 'rxjs/operators';
 export class CalendarService {
   constructor(private firestore: AngularFirestore) {}
 
+  /**
+   * Obtiene los turnos asignados en el mes actual para un trabajador específico.
+   * @param employeeID - El ID del trabajador (e.g., RUT).
+   * @returns Observable con los turnos del mes actual para el trabajador.
+   */
+
   // Método para crear un documento en una colección
   async create(collection: string, data: any) {
     return await this.firestore.collection(collection).add(data);
@@ -58,5 +64,28 @@ export class CalendarService {
         ref.where('rut_empleado', '==', rutEmpleado).where('contrasena', '==', contrasena)
       )
       .valueChanges();
+  }
+
+  getTurnosDelMesParaTrabajador(employeeID: string): Observable<any[]> {
+    const fechaActual = new Date();
+    const mesActual = `${fechaActual.getFullYear()}-${('0' + (fechaActual.getMonth() + 1)).slice(-2)}`; // e.g., "2024-11"
+
+    return this.firestore
+      .collection('shifts', (ref) =>
+        ref
+          .where('employeeID', '==', employeeID)
+          .where('date', '>=', `${mesActual}-01`)
+          .where('date', '<=', `${mesActual}-31`)
+      )
+      .valueChanges()
+      .pipe(
+        map((turnos: any[]) =>
+          turnos.map(turno => ({
+            date: turno.date,
+            startTime: turno.startTime,
+            endTime: turno.endTime
+          }))
+        )
+      );
   }
 }

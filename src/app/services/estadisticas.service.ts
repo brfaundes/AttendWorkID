@@ -2,12 +2,13 @@ import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { Injectable } from '@angular/core';
 import firebase from 'firebase/compat/app';
 import { Observable } from 'rxjs';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
 })
 export class EstadisticasService {
-  constructor(private firestore: AngularFirestore) {}
+  constructor(private firestore: AngularFirestore, private router: Router) {}
 
   /**
    * Registra el día trabajado y verifica si el empleado llegó tarde.
@@ -32,6 +33,7 @@ export class EstadisticasService {
 
       if (!turnoSnapshot || turnoSnapshot.empty) {
         console.log('No se encontró turno para hoy');
+        this.router.navigate(['/verificacion-fallida']);
         return;
       }
 
