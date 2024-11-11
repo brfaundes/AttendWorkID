@@ -1,7 +1,7 @@
 /* Estilo del encabezado principal */
 ion-header {
     --background: var(--ion-color-primary);
-    color: #fff;
+    color: #424669;
   }
   
   /* Contenedor del calendario */
@@ -9,7 +9,7 @@ ion-header {
     margin: 15px;
     padding: 15px;
     border-radius: 10px;
-    background-color: #fff;
+    background-color: #424669;
     box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.2);
     animation: fadeInUp 0.5s ease-out;
     overflow: hidden;
@@ -28,8 +28,8 @@ ion-header {
   
   .fc-event:hover {
     transform: scale(1.05);
-    background-color: #3880ff;
-    color: #fff;
+    background-color: #424669;
+    color: #424669;
   }
   
   /* Lista de turnos */
@@ -53,6 +53,7 @@ ion-header {
   
   /* Botón de asignación de turno */
   .assign-button {
+    color: #424669;;
     --border-radius: 8px;
     margin: 10px 0;
     animation: pulse 1s infinite alternate;
@@ -68,7 +69,7 @@ ion-header {
     border-radius: 8px;
     margin: 5px 0;
     transition: transform 0.2s ease-in-out;
-    background-color: #f0f0f0;
+    background-color: #424669;
     padding: 10px;
   }
   

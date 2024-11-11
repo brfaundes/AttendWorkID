@@ -1,18 +1,39 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>Login por RUT</ion-title>
+    <ion-title>Toma de Asistencia</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
-  <form (ngSubmit)="login()">
-    <label for="floatingInput">Ingrese su rut</label>
-    <div class="form-floating mb-3">
-      <input name="rutEmpleado" [(ngModel)]="rutEmpleado" type="text" class="form-control" id="floatingInput"
-        placeholder="Rut" required>
+  <div class="container">
+    <form (ngSubmit)="login()" class="login-form">
+      <div class="text-container">
+        <h2>Asistencia</h2> <!-- Título "Asistencia" arriba del logo -->
+      </div>
 
-    </div>
+      <div class="logo-container">
+        <img src="../../assets/icon/Face_ID_logo.svg.png" alt="Logo" class="logo" />
+      </div>
 
-    <ion-button class="boton-iniciosesion" expand="full" type="submit" >Iniciar Sesión</ion-button>
-  </form>
+      <div class="form-group">
+        <label for="rutEmpleado">Ingrese su RUT</label>
+        <input 
+          name="rutEmpleado" 
+          [(ngModel)]="rutEmpleado" 
+          type="text" 
+          id="rutEmpleado" 
+          class="form-control" 
+          placeholder="Ej: 12.345.678-9" 
+          required 
+        />
+      </div>
+
+      <ion-button 
+        class="boton-iniciosesion" 
+        expand="full" 
+        type="submit">
+        Iniciar Sesión
+      </ion-button>
+    </form>
+  </div>
 </ion-content>

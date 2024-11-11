@@ -62,5 +62,8 @@ export class LoginRutPage {
 
     await alert.present();
   }
+  goBack() {
+    this.router.navigate(['/home']); // Navega a la página principal
+  }
 }
 

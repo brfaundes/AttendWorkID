@@ -16,7 +16,6 @@
     </ion-grid>
   </ion-toolbar>
 
-  <!-- Mostrar el botón "Agregar trabajador" solo si el usuario es administrador -->
   <div class="container" style="background-color: #2D3250; padding: 5px; display: flex; justify-content: space-between; align-items: center;">
     <ion-title class="ion-padding">Lista de empleados</ion-title>
     <ion-button *ngIf="isAdmin" class="botonAgregar" id="open-modal-agregar" expand="block" (click)="resetFormulario()" style="margin-left: auto;">
@@ -26,7 +25,6 @@
 </ion-header>
 
 <ion-content [fullscreen]="true">
-
   <!-- Modal para agregar trabajador -->
   <ion-modal #modalAgregar trigger="open-modal-agregar">
     <ng-template>
@@ -40,7 +38,6 @@
       </ion-header>
 
       <ion-content class="ion-padding">
-        <!-- Formulario de agregar trabajador -->
         <ion-item>
           <ion-label position="floating">Email</ion-label>
           <ion-input type="email" [(ngModel)]="trabajador.email"></ion-input>
@@ -73,8 +70,6 @@
             <ion-select-option value="administrador">Administrador</ion-select-option>
           </ion-select>
         </ion-item>
-        
-        <!-- Campo para cargar la foto al agregar trabajador -->
         <ion-item>
           <ion-label position="stacked">Foto</ion-label>
           <input type="file" (change)="onImageSelected($event)" accept="image/*" />
@@ -87,36 +82,38 @@
     </ng-template>
   </ion-modal>
 
-  <!-- Lista de trabajadores -->
-  <ion-card>
-    <ion-list *ngIf="listaDeTrabajadores.length > 0">
-      <ion-item *ngFor="let trabajador of listaDeTrabajadores">
-        
-        <!-- Mostrar la imagen del trabajador si existe -->
-        <ion-thumbnail slot="start">
-          <img *ngIf="trabajador.fotoUrl" [src]="trabajador.fotoUrl" alt="Foto de trabajador" />
-          <ion-icon *ngIf="!trabajador.fotoUrl" name="person-circle-outline"></ion-icon>
-        </ion-thumbnail>
+  <!-- Lista de trabajadores en tarjetas -->
+  <ion-grid>
+    <ion-row>
+      <ion-col size="12" size-md="6" *ngFor="let trabajador of listaDeTrabajadores">
+        <ion-card>
+          <ion-item>
+            <ion-thumbnail slot="start">
+              <img *ngIf="trabajador.fotoUrl" [src]="trabajador.fotoUrl" alt="Foto de trabajador" />
+              <ion-icon *ngIf="!trabajador.fotoUrl" name="person-circle-outline"></ion-icon>
+            </ion-thumbnail>
+            <ion-label>
+              <h2>{{ trabajador.nombre }} {{ trabajador.apellido }}</h2>
+              <p>Cargo: {{ trabajador.cargo }}</p>
+              <p>Email: {{ trabajador.email }}</p>
+              <p>Rut: {{ trabajador.rut_empleado }}</p>
+            </ion-label>
+          </ion-item>
+          <ion-item lines="none">
+            <!-- Editar trabajador -->
+            <ion-button *ngIf="isAdmin" fill="outline" color="primary" (click)="cargarTrabajadorParaEditar(trabajador); modalEditar.present()">
+              Editar
+            </ion-button>
 
-        <ion-label>
-          <h2>{{ trabajador.nombre }} {{ trabajador.apellido }}</h2>
-          <p>Cargo: {{ trabajador.cargo }}</p>
-          <p>Email: {{ trabajador.email }}</p>
-          <p>Rut: {{ trabajador.rut_empleado }}</p>
-        </ion-label>
-
-        <!-- Botón para editar trabajador (solo visible para administradores) -->
-        <ion-button *ngIf="isAdmin" shape="round" class="botonEditar" (click)="cargarTrabajadorParaEditar(trabajador); modalEditar.present()">
-          <ion-icon slot="icon-only" name="create"></ion-icon>
-        </ion-button>
-        
-        <!-- Botón para eliminar trabajador (solo visible para administradores) -->
-        <ion-button *ngIf="isAdmin && trabajador.id" shape="round" class="botonEliminar" (click)="confirmarEliminarTrabajador(trabajador.id!, trabajador.fotoUrl!)">
-          <ion-icon slot="icon-only" name="trash-bin"></ion-icon>
-        </ion-button>
-      </ion-item>
-    </ion-list>
-  </ion-card>
+            <!-- Eliminar trabajador -->
+            <ion-button *ngIf="isAdmin && trabajador.id" fill="outline" color="danger" (click)="confirmarEliminarTrabajador(trabajador.id!, trabajador.fotoUrl!)">
+              Eliminar
+            </ion-button>
+          </ion-item>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
 
   <!-- Modal para editar trabajador -->
   <ion-modal #modalEditar>
@@ -131,7 +128,6 @@
       </ion-header>
 
       <ion-content class="ion-padding">
-        <!-- Formulario de editar trabajador -->
         <ion-item>
           <ion-label position="floating">Email</ion-label>
           <ion-input type="email" [(ngModel)]="trabajador.email"></ion-input>
@@ -164,8 +160,6 @@
             <ion-select-option value="administrador">Administrador</ion-select-option>
           </ion-select>
         </ion-item>
-        
-        <!-- Campo para cambiar la foto al editar trabajador -->
         <ion-item>
           <ion-label position="stacked">Cambiar Foto</ion-label>
           <input type="file" (change)="onEditImageSelected($event)" accept="image/*"/>
@@ -177,5 +171,4 @@
       </ion-footer>
     </ng-template>
   </ion-modal>
-
 </ion-content>
