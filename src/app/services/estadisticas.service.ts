@@ -33,7 +33,6 @@ export class EstadisticasService {
 
       if (!turnoSnapshot || turnoSnapshot.empty) {
         console.log('No se encontró turno para hoy');
-        this.router.navigate(['/verificacion-fallida']);
         return;
       }
 
@@ -90,4 +89,15 @@ export class EstadisticasService {
 
     return estadisticasRef.valueChanges({ idField: 'id' });
   }
+
+  // obtener las estadísticas de asistencia del trabajador logueado en el mes actual
+getEstadisticasMensualesParaTrabajador(rut_empleado: string): Observable<any> {
+  const fechaActual = new Date();
+  const mesActual = `${fechaActual.getFullYear()}-${('0' + (fechaActual.getMonth() + 1)).slice(-2)}`;
+
+  return this.firestore.collection('estadisticas_asistencia', ref => 
+    ref.where('mes', '==', mesActual)
+       .where('rut_empleado', '==', rut_empleado)
+  ).valueChanges();
+}
 }

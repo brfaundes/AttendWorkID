@@ -1,4 +1,6 @@
-import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { LOCALE_ID,NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import localeEs from '@angular/common/locales/es';
+import { registerLocaleData } from '@angular/common';
 import { BrowserModule } from '@angular/platform-browser';
 import { RouteReuseStrategy } from '@angular/router';
 import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
@@ -17,6 +19,8 @@ import { TrabajadoresPageModule } from './trabajadores/trabajadores.module';
 import { AsignarTurnoModalComponent } from './modals/asignar-turno-modal/asignar-turno-modal.component';
 import { EditShiftModalComponent } from './modals/edit-shift-modal/edit-shift-modal.component';
 
+registerLocaleData(localeEs);
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -33,7 +37,7 @@ import { EditShiftModalComponent } from './modals/edit-shift-modal/edit-shift-mo
     FullCalendarModule,
     FormsModule
   ],
-  providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy }],
+  providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy},{provide: LOCALE_ID, useValue: 'es'}],
   bootstrap: [AppComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
