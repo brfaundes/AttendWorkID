@@ -2,6 +2,8 @@ import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { Chart, registerables } from 'chart.js';
 import { EstadisticasService } from '../services/estadisticas.service';
 import { CalendarService } from '../services/calendar.service';
+import { DatabaseService } from '../services/database.service';
+import { Trabajador } from '../models';
 
 Chart.register(...registerables);
 
@@ -15,102 +17,112 @@ export class HomePage implements OnInit {
 
   diasTrabajadosChart: Chart | undefined;
   isAdmin: boolean = false;
-  employeeID: string | null = null; // ID del usuario actual
-  turnosDelMes: any[] = []; // Turnos del mes actual para el trabajador
-  
+  employeeID: string | null = null;
+  turnosDelMes: any[] = [];
+  listaDeTrabajadores: Trabajador[] = [];
+  trabajadorSeleccionadoID: string | null = null;
+  trabajadorSeleccionadoNombre: string = '';
+  selectedCargo: string = ''; // Cargo seleccionado
+  selectedYear: string = new Date().getFullYear().toString(); // Año seleccionado
+  selectedMonth: string = ('0' + (new Date().getMonth() + 1)).slice(-2); // Mes seleccionado (formato "MM")
+  estadisticas: any[] = []; // Almacena las estadísticas filtradas
+  cargos: string[] = ['conserje', 'aseo', 'administrador'];
+  years: string[] = Array.from({ length: 5 }, (_, i) => (new Date().getFullYear() - i).toString()); // Últimos 5 años
+
   constructor(
     private estadisticasService: EstadisticasService,
-    private calendarService: CalendarService
+    private calendarService: CalendarService,
+    private databaseService: DatabaseService
   ) {}
 
   ngOnInit() {
-    this.checkUserRole();  // Verificar rol y obtener ID
-    this.loadChartData();  // Cargar datos según el rol
+    this.checkUserRole();
+    this.loadChartData();
+
+    if (this.isAdmin) {
+      this.loadAllTrabajadores();
+    } else {
+      this.loadTurnosDelMes();
+    }
   }
 
   // Verificar rol y establecer el ID del trabajador
   checkUserRole() {
     const user = JSON.parse(localStorage.getItem('user') || '{}');
     this.isAdmin = user.cargo === 'administrador';
-    this.employeeID = user.rut_empleado; // Obtener el ID (RUT) del usuario logueado
+    this.employeeID = user.rut_empleado;
   }
 
+  // Cargar los datos en el gráfico con filtros de año, mes y cargo
   loadChartData() {
-    // Obtener datos de estadísticas desde Firestore
-    this.estadisticasService.getEstadisticasMensuales().subscribe((data) => {
-      let trabajadores: string[] = [];
-      let diasTrabajados: number[] = [];
-      let llegadasTarde: number[] = [];
+    if (this.selectedCargo) {
+      // Si hay un cargo seleccionado, obtener estadísticas por cargo y fecha
+      this.estadisticasService.getEstadisticasMensualesPorCargoYFecha(this.selectedCargo, this.selectedYear, this.selectedMonth)
+        .subscribe((data) => this.actualizarChartConDatos(data));
+    } else {
+      // Si no hay cargo seleccionado, obtener estadísticas generales por fecha
+      this.estadisticasService.getEstadisticasMensualesPorFecha(this.selectedYear, this.selectedMonth)
+        .subscribe((data) => this.actualizarChartConDatos(data));
+    }
+  }
 
-      if (this.isAdmin) {
-        // Administrador: mostrar datos de todos los trabajadores
-        trabajadores = data.map(d => d.nombreCompleto || 'Sin nombre');
-        diasTrabajados = data.map(d => d.diasTrabajados || 0);
-        llegadasTarde = data.map(d => d.llegadasTarde || 0);
-      } else if (this.employeeID) {
-        // Usuario regular: mostrar solo sus propios datos
-        const usuarioData = data.find(d => d.rut_empleado === this.employeeID);
-        if (usuarioData) {
-          trabajadores = [usuarioData.nombreCompleto || 'Sin nombre'];
-          diasTrabajados = [usuarioData.diasTrabajados || 0];
-          llegadasTarde = [usuarioData.llegadasTarde || 0];
-        }
-
-        // Cargar los turnos asignados en el mes para el trabajador
-        this.loadTurnosDelMes();
-      }
-
-      // Cargar o actualizar el gráfico con los datos obtenidos
-      this.updateDiasTrabajadosChart(trabajadores, diasTrabajados, llegadasTarde);
+  // Cargar lista de trabajadores si el usuario es administrador
+  loadAllTrabajadores() {
+    this.databaseService.getAll('trabajador').subscribe((trabajadores: Trabajador[]) => {
+      this.listaDeTrabajadores = trabajadores;
     });
-  }  
+  }
 
-  // Cargar turnos del mes para el trabajador actual
+  // Cargar turnos del mes para el trabajador actual o el trabajador seleccionado por el administrador
   loadTurnosDelMes() {
-    if (this.employeeID) {
-      this.calendarService.getTurnosDelMesParaTrabajador(this.employeeID).subscribe((turnos) => {
+    const id = this.isAdmin && this.trabajadorSeleccionadoID ? this.trabajadorSeleccionadoID : this.employeeID;
+    if (id) {
+      this.calendarService.getTurnosDelMesParaTrabajador(id).subscribe((turnos) => {
         this.turnosDelMes = turnos;
       });
     }
   }
 
+  // Método llamado al seleccionar un trabajador en el desplegable
+  onTrabajadorSeleccionado() {
+    const trabajador = this.listaDeTrabajadores.find(t => t.rut_empleado === this.trabajadorSeleccionadoID);
+    this.trabajadorSeleccionadoNombre = trabajador ? `${trabajador.nombre} ${trabajador.apellido}` : '';
+    this.loadTurnosDelMes();
+  }
+
+  // Actualizar el gráfico con los datos obtenidos
+  actualizarChartConDatos(data: any[]) {
+    const trabajadores = data.map(d => d.nombreCompleto || 'Sin nombre');
+    const diasTrabajados = data.map(d => d.diasTrabajados || 0);
+    const llegadasTarde = data.map(d => d.llegadasTarde || 0);
+
+    this.updateDiasTrabajadosChart(trabajadores, diasTrabajados, llegadasTarde);
+  }
+
+  // Crear o actualizar el gráfico
   updateDiasTrabajadosChart(labels: string[], diasTrabajados: number[], llegadasTarde: number[]) {
     if (this.diasTrabajadosChart) {
-      // Si el gráfico ya existe, actualiza los datos y etiquetas
       this.diasTrabajadosChart.data.labels = labels;
       this.diasTrabajadosChart.data.datasets[0].data = diasTrabajados;
       this.diasTrabajadosChart.data.datasets[1].data = llegadasTarde;
       this.diasTrabajadosChart.update();
     } else {
-      // Si no existe, crea el gráfico
       this.diasTrabajadosChart = new Chart(this.diasTrabajadosChartRef.nativeElement, {
         type: 'bar',
         data: {
           labels,
           datasets: [
-            {
-              label: 'Días Trabajados',
-              data: diasTrabajados,
-              backgroundColor: 'rgba(54, 162, 235, 0.5)',
-              borderColor: 'rgba(54, 162, 235, 1)',
-              borderWidth: 1,
-            },
-            {
-              label: 'Atrasos',
-              data: llegadasTarde,
-              backgroundColor: 'rgba(255, 99, 132, 0.5)', // Rojo para llegadas tarde
-              borderColor: 'rgba(255, 99, 132, 1)',
-              borderWidth: 1,
-            },
+            { label: 'Días Trabajados', data: diasTrabajados, backgroundColor: 'rgba(54, 162, 235, 0.5)', borderColor: 'rgba(54, 162, 235, 1)', borderWidth: 1 },
+            { label: 'Atrasos', data: llegadasTarde, backgroundColor: 'rgba(255, 99, 132, 0.5)', borderColor: 'rgba(255, 99, 132, 1)', borderWidth: 1 },
           ],
         },
-        options: {
-          responsive: true,
-          scales: {
-            y: { beginAtZero: true },
-          },
-        },
+        options: { responsive: true, scales: { y: { beginAtZero: true } } },
       });
     }
+  }
+
+  // Método para actualizar el gráfico cuando cambian los filtros de año o mes
+  onYearOrMonthChange() {
+    this.loadChartData(); // Cargar datos en el gráfico con los nuevos filtros
   }
 }

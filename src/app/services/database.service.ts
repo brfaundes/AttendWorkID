@@ -61,4 +61,11 @@ export class DatabaseService {
       return null;
     }
   }
+
+  getTrabajadoresPorCargo(cargo: string): Observable<Trabajador[]> {
+    return this.firestore.collection<Trabajador>('trabajador', ref => 
+      ref.where('cargo', '==', cargo)
+    ).valueChanges();
+  }
+  
 }
