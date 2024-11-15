@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { LoginService } from './services/login.service';
 import { Trabajador } from './models';
 import { Router } from '@angular/router';
+import { MenuController } from '@ionic/angular';
 
 @Component({
   selector: 'app-root',
@@ -18,7 +19,9 @@ export class AppComponent implements OnInit {
   public labels = [{ title: 'Cerrar sesión', url: 'login', icon: 'exit' }];
   isAdmin: boolean = false;
 
-  constructor(private loginService: LoginService, private router: Router) {}
+  constructor(private loginService: LoginService, 
+              private router: Router, 
+              private menuController: MenuController) {}
 
   ngOnInit() {
     this.restoreSession(); // Restaurar la sesión si ya está activa
@@ -62,6 +65,7 @@ export class AppComponent implements OnInit {
     ];
 
     localStorage.removeItem('user'); // Elimina el usuario de localStorage
+    this.menuController.enable(false);
     this.router.navigate(['/login']);
   }
 

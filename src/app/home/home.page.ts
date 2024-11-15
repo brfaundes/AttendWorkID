@@ -53,27 +53,36 @@ export class HomePage implements OnInit {
     this.employeeID = user.rut_empleado;
   }
 
-  // Cargar los datos en el gráfico con filtros de año, mes y cargo
+  // Cargar los datos en el gráfico con filtros de año, mes y cargo, solo si es administrador
   loadChartData() {
-    if (this.selectedCargo) {
-      // Si hay un cargo seleccionado, obtener estadísticas por cargo y fecha
-      this.estadisticasService.getEstadisticasMensualesPorCargoYFecha(this.selectedCargo, this.selectedYear, this.selectedMonth)
-        .subscribe((data) => this.actualizarChartConDatos(data));
+    if (this.isAdmin) {
+      if (this.selectedCargo) {
+        // Obtener estadísticas filtradas por cargo y fecha si el administrador selecciona un cargo
+        this.estadisticasService.getEstadisticasMensualesPorCargoYFecha(this.selectedCargo, this.selectedYear, this.selectedMonth)
+          .subscribe((data) => this.actualizarChartConDatos(data));
+      } else {
+        // Obtener estadísticas generales para el mes/año seleccionados
+        this.estadisticasService.getEstadisticasMensualesPorFecha(this.selectedYear, this.selectedMonth)
+          .subscribe((data) => this.actualizarChartConDatos(data));
+      }
     } else {
-      // Si no hay cargo seleccionado, obtener estadísticas generales por fecha
-      this.estadisticasService.getEstadisticasMensualesPorFecha(this.selectedYear, this.selectedMonth)
-        .subscribe((data) => this.actualizarChartConDatos(data));
+      // Si es trabajador, cargar solo sus propias estadísticas
+      this.estadisticasService.getEstadisticasMensualesParaTrabajador(this.employeeID!).subscribe((data) => {
+        this.actualizarChartConDatos(data);
+      });
     }
   }
 
-  // Cargar lista de trabajadores si el usuario es administrador
+  // Cargar lista de trabajadores solo si el usuario es administrador
   loadAllTrabajadores() {
-    this.databaseService.getAll('trabajador').subscribe((trabajadores: Trabajador[]) => {
-      this.listaDeTrabajadores = trabajadores;
-    });
+    if (this.isAdmin) {
+      this.databaseService.getAll('trabajador').subscribe((trabajadores: Trabajador[]) => {
+        this.listaDeTrabajadores = trabajadores;
+      });
+    }
   }
 
-  // Cargar turnos del mes para el trabajador actual o el trabajador seleccionado por el administrador
+  // Cargar turnos del mes solo para el trabajador actual o el trabajador seleccionado por el administrador
   loadTurnosDelMes() {
     const id = this.isAdmin && this.trabajadorSeleccionadoID ? this.trabajadorSeleccionadoID : this.employeeID;
     if (id) {
@@ -85,18 +94,26 @@ export class HomePage implements OnInit {
 
   // Método llamado al seleccionar un trabajador en el desplegable
   onTrabajadorSeleccionado() {
-    const trabajador = this.listaDeTrabajadores.find(t => t.rut_empleado === this.trabajadorSeleccionadoID);
-    this.trabajadorSeleccionadoNombre = trabajador ? `${trabajador.nombre} ${trabajador.apellido}` : '';
-    this.loadTurnosDelMes();
+    if (this.isAdmin) {
+      const trabajador = this.listaDeTrabajadores.find(t => t.rut_empleado === this.trabajadorSeleccionadoID);
+      this.trabajadorSeleccionadoNombre = trabajador ? `${trabajador.nombre} ${trabajador.apellido}` : '';
+      this.loadTurnosDelMes();
+    }
   }
 
   // Actualizar el gráfico con los datos obtenidos
   actualizarChartConDatos(data: any[]) {
-    const trabajadores = data.map(d => d.nombreCompleto || 'Sin nombre');
-    const diasTrabajados = data.map(d => d.diasTrabajados || 0);
-    const llegadasTarde = data.map(d => d.llegadasTarde || 0);
+    if (data.length === 0) {
+      // Si no hay datos, limpiar el gráfico
+      this.clearChart();
+    } else {
+      // Si hay datos, actualizarlos en el gráfico
+      const trabajadores = data.map(d => d.nombreCompleto || 'Sin nombre');
+      const diasTrabajados = data.map(d => d.diasTrabajados || 0);
+      const llegadasTarde = data.map(d => d.llegadasTarde || 0);
 
-    this.updateDiasTrabajadosChart(trabajadores, diasTrabajados, llegadasTarde);
+      this.updateDiasTrabajadosChart(trabajadores, diasTrabajados, llegadasTarde);
+    }
   }
 
   // Crear o actualizar el gráfico
@@ -118,6 +135,15 @@ export class HomePage implements OnInit {
         },
         options: { responsive: true, scales: { y: { beginAtZero: true } } },
       });
+    }
+  }
+
+  // Limpiar el gráfico en caso de que no haya datos
+  clearChart() {
+    if (this.diasTrabajadosChart) {
+      this.diasTrabajadosChart.data.labels = [];
+      this.diasTrabajadosChart.data.datasets.forEach(dataset => dataset.data = []);
+      this.diasTrabajadosChart.update();
     }
   }
 
