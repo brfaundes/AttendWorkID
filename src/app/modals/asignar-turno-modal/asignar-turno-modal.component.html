@@ -38,13 +38,19 @@
         </ion-item>
 
         <ion-item lines="none">
-          <ion-label position="stacked">Hora de fin</ion-label>
-          <ion-datetime display-format="HH:mm" picker-format="HH:mm" presentation="time"
-                        [(ngModel)]="endTime" name="endTime" required>
-          </ion-datetime>
+          <ion-label position="stacked">Duración (horas)</ion-label>
+          <ion-input type="number"
+                     [(ngModel)]="durationHours"
+                     name="durationHours"
+                     min="1"
+                     required
+                     (keydown)="preventInvalidInput($event)"
+                     (ionBlur)="validateDuration()"
+                     placeholder="Ingrese la duración en horas">
+          </ion-input>
         </ion-item>
 
-        <ion-button expand="block" type="submit" color="secondary" class="assign-button" [disabled]="!selectedEmployee || !selectedDates.length || !startTime || !endTime">
+        <ion-button expand="block" type="submit" color="secondary" class="assign-button" [disabled]="!selectedEmployee || !selectedDates.length || !startTime || !durationHours">
           <ion-icon slot="start" name="checkmark-done-outline"></ion-icon>
           Asignar Turnos
         </ion-button>

@@ -1,12 +1,11 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { ModalController } from '@ionic/angular';
+import { ModalController, AlertController } from '@ionic/angular';
 import { CalendarService } from '../../services/calendar.service';
 
 interface Employee {
   nombre: string;
   apellido: string;
   rut_empleado: string;
-  // Otros campos si son necesarios
 }
 
 @Component({
@@ -15,21 +14,24 @@ interface Employee {
   styleUrls: ['./asignar-turno-modal.component.scss'],
 })
 export class AsignarTurnoModalComponent implements OnInit {
-  @Input() selectedDates: string[] = []; // Arreglo para almacenar múltiples fechas
+  @Input() selectedDates: string[] = [];
   employees: Employee[] = [];
   selectedEmployee: Employee | null = null;
   startTime: string = '';
-  endTime: string = '';
+  durationHours: number = 1;  // Valor inicial de duración mínimo
   minDate: string = '';
 
-  constructor(private modalController: ModalController, private calendarService: CalendarService) {}
+  constructor(
+    private modalController: ModalController,
+    private calendarService: CalendarService,
+    private alertController: AlertController
+  ) {}
 
   ngOnInit() {
     this.loadEmployees();
     this.setMinDate();
   }
 
-  // Configurar la fecha mínima como la fecha actual
   setMinDate() {
     const now = new Date();
     const year = now.getFullYear();
@@ -40,7 +42,6 @@ export class AsignarTurnoModalComponent implements OnInit {
     this.minDate = `${year}-${month}-${day}T${hours}:${minutes}`;
   }
 
-  // Cargar empleados
   loadEmployees() {
     this.calendarService.getEmployees().subscribe((data: Employee[]) => {
       this.employees = data;
@@ -51,51 +52,125 @@ export class AsignarTurnoModalComponent implements OnInit {
     this.modalController.dismiss();
   }
 
-  // Método para asignar turnos en múltiples fechas
+  // Evitar entradas no numéricas como "e", "+", y "-" en el campo de duración
+  preventInvalidInput(event: KeyboardEvent) {
+    if (event.key === 'e' || event.key === '+' || event.key === '-') {
+      event.preventDefault();
+    }
+  }
+
+  // Validar que la duración sea al menos 1 hora
+  validateDuration() {
+    if (this.durationHours < 1 || isNaN(this.durationHours)) {
+      this.durationHours = 1;  // Restablece a 1 si el valor es inválido
+    }
+  }
+
+  calculateEndTime(): string {
+    const timeOnly = this.startTime.includes('T') ? this.startTime.split('T')[1].substring(0, 5) : this.startTime;
+
+    if (!timeOnly || !/^\d{2}:\d{2}$/.test(timeOnly)) {
+      console.error('Formato de hora de inicio incorrecto:', timeOnly);
+      return '00:00';
+    }
+
+    const [startHours, startMinutes] = timeOnly.split(':').map(Number);
+    const hoursToAdd = Number(this.durationHours);
+    if (isNaN(startHours) || isNaN(startMinutes) || hoursToAdd <= 0) {
+      console.error('Valores inválidos para hora de inicio o duración:', {
+        startHours, startMinutes, durationHours: this.durationHours
+      });
+      return '00:00';
+    }
+
+    const startDate = new Date();
+    startDate.setHours(startHours, startMinutes, 0, 0);
+
+    let endHours = startDate.getHours() + hoursToAdd;
+    const endMinutes = startDate.getMinutes();
+    const dayDifference = Math.floor(endHours / 24);
+    endHours = endHours % 24;
+
+    const formattedEndHours = endHours.toString().padStart(2, '0');
+    const formattedEndMinutes = endMinutes.toString().padStart(2, '0');
+    const endTime = `${formattedEndHours}:${formattedEndMinutes}`;
+    return dayDifference > 0 ? `${endTime} (día siguiente)` : endTime;
+  }
+
+  // Función para mostrar el cuadro de confirmación antes de crear el turno
+  async showConfirmation(shift: any) {
+    const alert = await this.alertController.create({
+      header: 'Confirmar Turno',
+      message: `¿Deseas asignar el turno para ${shift.employeeName} ${shift.employeeLastName} el ${shift.date} desde las ${shift.startTime} hasta las ${shift.endTime}?`,
+      buttons: [
+        {
+          text: 'Cancelar',
+          role: 'cancel',
+          handler: () => {
+            console.log('Asignación de turno cancelada.');
+          },
+        },
+        {
+          text: 'Aceptar',
+          handler: () => {
+            this.createShift(shift);
+          },
+        },
+      ],
+    });
+
+    await alert.present();
+  }
+
+  // Función para crear el turno en la base de datos
+  async createShift(shift: any) {
+    try {
+      await this.calendarService.create('shifts', shift);
+      console.log('Turno asignado correctamente');
+      this.closeModal();
+    } catch (error) {
+      console.error('Error al asignar el turno: ', error);
+    }
+  }
+
   async assignShifts() {
     if (!this.selectedEmployee || !this.selectedEmployee.rut_empleado) {
       console.error('Empleado no seleccionado o sin ID válido');
       return;
     }
 
-    // Validar que la hora de inicio sea menor que la hora de fin
-    const formattedStartTime = this.extractTime(this.startTime);
-    const formattedEndTime = this.extractTime(this.endTime);
-
-    if (formattedStartTime >= formattedEndTime) {
-      console.error('La hora de inicio debe ser menor a la hora de fin');
-      alert('La hora de inicio debe ser menor a la hora de fin');
+    if (this.durationHours < 1) {
+      console.error('La duración del turno debe ser al menos de 1 hora');
+      alert('La duración del turno debe ser al menos de 1 hora.');
       return;
     }
 
-    // Crear turnos para cada fecha seleccionada
+    const formattedStartTime = this.extractTime(this.startTime);
+    const calculatedEndTime = this.calculateEndTime();
+
+    if (calculatedEndTime === '00:00') {
+      console.error('No se pudo calcular la hora de fin correctamente');
+      alert('Error al calcular la hora de fin. Verifique los datos ingresados.');
+      return;
+    }
+
     const shifts = this.selectedDates.map(date => ({
       employeeID: this.selectedEmployee!.rut_empleado,
       employeeName: this.selectedEmployee!.nombre,
       employeeLastName: this.selectedEmployee!.apellido,
-      date: date.split('T')[0], // Almacenar solo la fecha
+      date: date.split('T')[0],
       startTime: formattedStartTime,
-      endTime: formattedEndTime,
+      endTime: calculatedEndTime,
     }));
 
-    console.log('Turnos a asignar:', shifts);
-
-    // Guardar cada turno en la base de datos
-    try {
-      for (const shift of shifts) {
-        await this.calendarService.create('shifts', shift);
-      }
-      console.log('Turnos asignados correctamente');
-      this.closeModal(); // Cierra el modal al terminar
-    } catch (error) {
-      console.error('Error al asignar los turnos: ', error);
+    // Mostrar confirmación para cada turno
+    for (const shift of shifts) {
+      await this.showConfirmation(shift);
     }
   }
 
-  // Función para extraer solo la hora en formato HH:mm
   extractTime(dateTime: string): string {
-    if (!dateTime) return '';
-    const timePart = dateTime.split('T')[1];
-    return timePart ? timePart.substring(0, 5) : '';
+    const timePart = dateTime.includes('T') ? dateTime.split('T')[1].substring(0, 5) : dateTime;
+    return timePart;
   }
 }
