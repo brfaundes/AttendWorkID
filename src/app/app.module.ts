@@ -18,7 +18,7 @@ import { TrabajadoresPageModule } from './trabajadores/trabajadores.module';
 
 import { AsignarTurnoModalComponent } from './modals/asignar-turno-modal/asignar-turno-modal.component';
 import { EditShiftModalComponent } from './modals/edit-shift-modal/edit-shift-modal.component';
-
+import { FilterModalComponent } from './modals/filter-modal/filter-modal.component';
 registerLocaleData(localeEs);
 
 @NgModule({
@@ -26,6 +26,7 @@ registerLocaleData(localeEs);
     AppComponent,
     AsignarTurnoModalComponent,
     EditShiftModalComponent,
+    FilterModalComponent,
   ],
   imports: [ 
     BrowserModule, 

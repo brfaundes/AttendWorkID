@@ -1,0 +1,33 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Filtrar</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="closeModal()">Cerrar</ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <ion-item>
+    <ion-label>Mes</ion-label>
+    <ion-select [(ngModel)]="selectedMonth">
+      <ion-select-option *ngFor="let month of months" [value]="month.value">{{ month.text }}</ion-select-option>
+    </ion-select>
+  </ion-item>
+
+  <ion-item>
+    <ion-label>Año</ion-label>
+    <ion-select [(ngModel)]="selectedYear">
+      <ion-select-option *ngFor="let year of years" [value]="year">{{ year }}</ion-select-option>
+    </ion-select>
+  </ion-item>
+
+  <ion-item>
+    <ion-label>Cargo</ion-label>
+    <ion-select [(ngModel)]="selectedCargo">
+      <ion-select-option *ngFor="let cargo of cargos" [value]="cargo.value">{{ cargo.text }}</ion-select-option>
+    </ion-select>
+  </ion-item>
+
+  <ion-button expand="full" (click)="applyFilters()">Aplicar Filtros</ion-button>
+</ion-content>

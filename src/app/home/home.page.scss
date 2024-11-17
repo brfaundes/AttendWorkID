@@ -1,32 +1,131 @@
-ion-header,ion-toolbar{
-    --background: #424669;
+ion-header,
+ion-toolbar {
+  --background: #424769; /* Fondo del header */
+  --color: #ffffff; /* Texto blanco */
 }
 
-ion-content{
-    --background: #B9BDD0;
+ion-content {
+  --background: #B9BDD0;
+  color: #ffffff; /* Texto */
+}
+
+.chart-container {
+  margin-top: 20px;
+  background-color: #ffffff; /* Fondo del contenedor */
+  padding: 15px;
+  border-radius: 10px;
+  max-width: 100%; /* Ocupa todo el ancho disponible */
+  width: 100%;
+  height: auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.selector-trabajador,
+.turnos-mensuales {
+  margin-top: 20px;
+  background-color: #424769; /* Fondo de secciones */
+  border-radius: 10px;
+  padding: 10px;
+  color: #ffffff;
+}
+
+ion-card {
+  --background: #ffffff; /* Fondo de las tarjetas */
+  margin-bottom: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+}
+
+ion-card-title {
+  font-size: 1.2em;
+  font-weight: bold;
+  color: #2d3250; /* Texto en azul oscuro */
+}
+
+ion-card-content p {
+  margin: 5px 0;
+  color: #676f9d; /* Texto en azul suave */
+}
+
+ion-button {
+  --background: #f9b17a; /* Botones con fondo naranja */
+  --border: none;
+  --box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  --color: #ffffff; /* Texto blanco */
+  border-radius: 5px;
+}
+
+ion-select {
+  --background: #2d3250; /* Fondo de los selectores */
+  --color: #ffffff; /* Texto blanco */
+  border: 1px solid #676f9d; /* Borde azul suave */
+}
+
+ion-icon {
+  font-size: 24px;
+  color: #f9b17a; /* Iconos en color naranja */
+}
+
+.filtro-cargo {
+  ion-item {
+    background-color: #676f9d; /* Fondo del item */
+    border-radius: 5px;
+    margin-bottom: 15px;
+  }
+
+  ion-label {
+    color: #ffffff; /* Etiqueta en blanco */
+  }
 }
 
 
-//css ventana agregar trabajador/////////////////////// 
+canvas {
+  width: 100% !important; /* Ancho del gráfico dinámico */
+  max-width: 1200px; /* Máximo ancho en pantallas grandes */
+  height: 400px !important; /* Altura predeterminada */
+}
 
-ion-modal {
-    --height: 50%;
-    --border-radius: 16px;
-    --box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
-  }
-  
-  ion-modal::part(backdrop) {
-    background: rgba(209, 213, 219);
-    opacity: 1;
-  }
-  
-  ion-modal ion-toolbar {
-    --background: rgb(14 116 144);
-    --color: white;
-  }
-  
-  ion-footer{
-   text-align: center;
+//animaciones para modal
+.custom-modal-class {
+  --width: 80%;
+  --height: 70%;
+  --border-radius: 15px;
+  --background: rgba(255, 255, 255, 0.95);
+  --box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(10px);
+}
+
+.custom-modal-class .modal-wrapper {
+  position: fixed;
+  top: 10%;
+  left: 10%;
+  right: 10%;
+  bottom: 10%;
+  border-radius: 15px;
+  background: rgba(255, 255, 255, 0.95);
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.custom-modal-class .modal-content {
+  position: relative;
+  z-index: 10;
+}
+
+.custom-modal-class .modal-backdrop {
+  background-color: rgba(0, 0, 0, 0.3);
+}
+
+@media (max-width: 768px) {
+  .chart-container {
+    height: auto;
+    padding: 10px;
   }
 
-/////////////////////////////////////////////////////
+  canvas {
+    height: 300px !important; /* Altura para pantallas pequeñas */
+  }
+}

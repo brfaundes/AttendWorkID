@@ -7,47 +7,13 @@
 
 <ion-content class="ion-padding">
   <div *ngIf="isAdmin" class="filtro-cargo">
-    <ion-item>
-      <ion-label>Cargo</ion-label>
-      <ion-select [(ngModel)]="selectedCargo" (ionChange)="loadChartData()">
-        <ion-select-option value="">Todos</ion-select-option>
-        <ion-select-option value="conserje">Conserje</ion-select-option>
-        <ion-select-option value="aseo">Aseo</ion-select-option>
-        <ion-select-option value="administrador">Administrador</ion-select-option>
-      </ion-select>
-    </ion-item>
-  
-  
-  
-  <ion-item>
-    <ion-label>Mes</ion-label>
-    <ion-select [(ngModel)]="selectedMonth" (ionChange)="loadChartData()">
-      <ion-select-option value="01">Enero</ion-select-option>
-      <ion-select-option value="02">Febrero</ion-select-option>
-      <ion-select-option value="03">Marzo</ion-select-option>
-      <ion-select-option value="04">Abril</ion-select-option>
-      <ion-select-option value="05">Mayo</ion-select-option>
-      <ion-select-option value="06">Junio</ion-select-option>
-      <ion-select-option value="07">Julio</ion-select-option>
-      <ion-select-option value="08">Agosto</ion-select-option>
-      <ion-select-option value="09">Septiembre</ion-select-option>
-      <ion-select-option value="10">Octubre</ion-select-option>
-      <ion-select-option value="11">Noviembre</ion-select-option>
-      <ion-select-option value="12">Diciembre</ion-select-option>
-    </ion-select>
-  </ion-item>
-  <ion-item>
-    <ion-label>Año</ion-label>
-    <ion-select [(ngModel)]="selectedYear" (ionChange)="loadChartData()">
-      <ion-select-option value="2024">2024</ion-select-option>
-      <ion-select-option value="2023">2023</ion-select-option>
-    </ion-select>
-  </ion-item>
+    <div *ngIf="isAdmin" class="filtro-cargo">
+      <ion-button expand="block" (click)="openFilter()">Filtrar por Mes y Año</ion-button>
+    </div>
   </div>
   
-  <div class="chart-container" >
-    <h2>Estadisticas del mes</h2>
-    <canvas #diasTrabajadosChart ></canvas>
+  <div class="chart-container">
+    <canvas #diasTrabajadosChart></canvas>
   </div>
 
 

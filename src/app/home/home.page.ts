@@ -4,6 +4,8 @@ import { EstadisticasService } from '../services/estadisticas.service';
 import { CalendarService } from '../services/calendar.service';
 import { DatabaseService } from '../services/database.service';
 import { Trabajador } from '../models';
+import { ModalController } from '@ionic/angular';
+import { FilterModalComponent } from '../modals/filter-modal/filter-modal.component';
 
 Chart.register(...registerables);
 
@@ -32,7 +34,8 @@ export class HomePage implements OnInit {
   constructor(
     private estadisticasService: EstadisticasService,
     private calendarService: CalendarService,
-    private databaseService: DatabaseService
+    private databaseService: DatabaseService,
+    private modalController: ModalController
   ) {}
 
   ngOnInit() {
@@ -58,11 +61,13 @@ export class HomePage implements OnInit {
     if (this.isAdmin) {
       if (this.selectedCargo) {
         // Obtener estadísticas filtradas por cargo y fecha si el administrador selecciona un cargo
-        this.estadisticasService.getEstadisticasMensualesPorCargoYFecha(this.selectedCargo, this.selectedYear, this.selectedMonth)
+        this.estadisticasService
+          .getEstadisticasMensualesPorCargoYFecha(this.selectedCargo, this.selectedYear, this.selectedMonth)
           .subscribe((data) => this.actualizarChartConDatos(data));
       } else {
         // Obtener estadísticas generales para el mes/año seleccionados
-        this.estadisticasService.getEstadisticasMensualesPorFecha(this.selectedYear, this.selectedMonth)
+        this.estadisticasService
+          .getEstadisticasMensualesPorFecha(this.selectedYear, this.selectedMonth)
           .subscribe((data) => this.actualizarChartConDatos(data));
       }
     } else {
@@ -95,7 +100,7 @@ export class HomePage implements OnInit {
   // Método llamado al seleccionar un trabajador en el desplegable
   onTrabajadorSeleccionado() {
     if (this.isAdmin) {
-      const trabajador = this.listaDeTrabajadores.find(t => t.rut_empleado === this.trabajadorSeleccionadoID);
+      const trabajador = this.listaDeTrabajadores.find((t) => t.rut_empleado === this.trabajadorSeleccionadoID);
       this.trabajadorSeleccionadoNombre = trabajador ? `${trabajador.nombre} ${trabajador.apellido}` : '';
       this.loadTurnosDelMes();
     }
@@ -108,9 +113,9 @@ export class HomePage implements OnInit {
       this.clearChart();
     } else {
       // Si hay datos, actualizarlos en el gráfico
-      const trabajadores = data.map(d => d.nombreCompleto || 'Sin nombre');
-      const diasTrabajados = data.map(d => d.diasTrabajados || 0);
-      const llegadasTarde = data.map(d => d.llegadasTarde || 0);
+      const trabajadores = data.map((d) => d.nombreCompleto || 'Sin nombre');
+      const diasTrabajados = data.map((d) => d.diasTrabajados || 0);
+      const llegadasTarde = data.map((d) => d.llegadasTarde || 0);
 
       this.updateDiasTrabajadosChart(trabajadores, diasTrabajados, llegadasTarde);
     }
@@ -129,26 +134,94 @@ export class HomePage implements OnInit {
         data: {
           labels,
           datasets: [
-            { label: 'Días Trabajados', data: diasTrabajados, backgroundColor: 'rgba(54, 162, 235, 0.5)', borderColor: 'rgba(54, 162, 235, 1)', borderWidth: 1 },
-            { label: 'Atrasos', data: llegadasTarde, backgroundColor: 'rgba(255, 99, 132, 0.5)', borderColor: 'rgba(255, 99, 132, 1)', borderWidth: 1 },
+            {
+              label: 'Días Trabajados',
+              data: diasTrabajados,
+              backgroundColor: 'rgba(249, 177, 122, 0.95)',
+              borderColor: 'rgba(249, 177, 122, 1)',
+              borderWidth: 1,
+            },
+            {
+              label: 'Atrasos',
+              data: llegadasTarde,
+              backgroundColor: 'rgba(45, 50, 80, 0.9)',
+              borderColor: 'rgba(45, 50, 80, 1)',
+              borderWidth: 1,
+            },
           ],
         },
-        options: { responsive: true, scales: { y: { beginAtZero: true } } },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false, // Permite ajustar dinámicamente el tamaño
+          plugins: {
+            legend: {
+              position: 'top',
+              labels: {
+                font: {
+                  size: 14, // Tamaño de texto de la leyenda
+                },
+              },
+            },
+          },
+          scales: {
+            x: {
+              ticks: {
+                font: {
+                  size: 12, // Ajusta el tamaño de las etiquetas del eje X
+                },
+                autoSkip: true, // Evita que se muestren todas las etiquetas si son demasiadas
+                maxRotation: 45, // Rotación máxima de las etiquetas
+                minRotation: 0, // Rotación mínima de las etiquetas
+              },
+            },
+            y: {
+              beginAtZero: true,
+              ticks: {
+                stepSize: 1, // Intervalo entre ticks
+                font: {
+                  size: 12, // Ajusta el tamaño de las etiquetas del eje Y
+                },
+              },
+            },
+          },
+        },
       });
     }
   }
+  
 
   // Limpiar el gráfico en caso de que no haya datos
   clearChart() {
     if (this.diasTrabajadosChart) {
       this.diasTrabajadosChart.data.labels = [];
-      this.diasTrabajadosChart.data.datasets.forEach(dataset => dataset.data = []);
+      this.diasTrabajadosChart.data.datasets.forEach((dataset) => (dataset.data = []));
       this.diasTrabajadosChart.update();
     }
   }
 
-  // Método para actualizar el gráfico cuando cambian los filtros de año o mes
-  onYearOrMonthChange() {
-    this.loadChartData(); // Cargar datos en el gráfico con los nuevos filtros
+  // Método para abrir el modal de filtros
+  async openFilter() {
+    const modal = await this.modalController.create({
+      component: FilterModalComponent,
+      componentProps: {
+        selectedMonth: this.selectedMonth,
+        selectedYear: this.selectedYear,
+        selectedCargo: this.selectedCargo, // Agregado
+      },
+      cssClass: 'custom-modal-class', // Clase personalizada para los estilos
+      showBackdrop: true, // Muestra el fondo traslúcido
+      backdropDismiss: true, // Permite cerrar al hacer clic en el fondo
+    });
+  
+    modal.onDidDismiss().then((dataReturned) => {
+      if (dataReturned.data) {
+        this.selectedMonth = dataReturned.data.selectedMonth;
+        this.selectedYear = dataReturned.data.selectedYear;
+        this.selectedCargo = dataReturned.data.selectedCargo; // Agregado
+        this.loadChartData();
+      }
+    });
+  
+    return await modal.present();
   }
 }

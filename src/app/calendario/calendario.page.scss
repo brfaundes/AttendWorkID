@@ -1,14 +1,80 @@
 ion-content {
-  --background: #B9BDD0;
+  --background: #B9BDD0; /* Fondo de todo el contenido */
 }
 
-/* Título de la vista actual */
+ion-toolbar {
+  --background: #424769; /* Fondo del header */
+  --color: #ffffff; /* Texto blanco */
+}
+
+ion-button {
+  --background: #f9b17a; /* Fondo naranja */
+  --color: #ffffff; /* Texto blanco */
+}
+
 .current-view-title {
-  text-align: center;
+  display: flex;
+  justify-content: center; /* Centra horizontalmente */
+  align-items: center; /* Centra verticalmente */
+  text-align: center; /* Alineación de texto centrada */
+  margin: 10px 0; /* Espaciado superior e inferior */
+  font-size: 1.5rem; /* Tamaño de fuente */
+  font-weight: bold; /* Texto en negrita */
+  color: #ffffff; /* Color del texto en blanco */
+}
+
+.turn-list {
+  background-color: #2d3250; /* Fondo de la lista de turnos */
+}
+
+.shift-list {
+  background-color: #2d3250; /* Fondo oscuro */
+  padding: 15px;
+  border-radius: 10px;
+}
+
+.shift-item {
+  --background: #000000; /* Fondo negro para cada item */
   margin: 10px 0;
-  font-size: 1.5rem;
+  padding: 10px;
+  border-radius: 8px;
+  color: #ffffff; /* Texto blanco */
+}
+
+ion-label h2 {
+  font-size: 1rem;
   font-weight: bold;
-  color: #343a40; /* Color de texto oscuro */
+  color: #ffffff; /* Títulos en blanco */
+  margin-bottom: 5px;
+}
+
+ion-label p {
+  font-size: 0.9rem;
+  color: #ffffff; /* Texto blanco */
+  margin: 0;
+}
+
+ion-list-header h2 {
+  color: #ffffff; /* Encabezado en blanco */
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin-bottom: 15px;
+  text-align: center;
+}
+
+.edit-icon,
+.trash-icon {
+  font-size: 1.5rem;
+  color: #f9b17a; /* Íconos en naranja */
+  margin-left: 10px;
+  cursor: pointer;
+}
+
+.no-shifts {
+  text-align: center;
+  font-size: 1rem;
+  color: #f9b17a; /* Mensaje en naranja */
+  margin-top: 20px;
 }
 
 /* Ajustes generales del encabezado del calendario */
@@ -21,19 +87,7 @@ ion-content {
   flex-wrap: wrap;
 }
 
-/* Contenedor de los botones */
-.fc-toolbar-chunk {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin: 0;
-  padding: 0;
-  width: 100%;
-  box-sizing: border-box;
-  flex-wrap: wrap;
-}
-
-/* Estilo para los botones de navegación */
+/* Botones de navegación */
 .fc-toolbar .fc-button {
   background-color: #007bff; /* Azul estándar */
   border: none;
@@ -49,23 +103,13 @@ ion-content {
   background-color: #0056b3; /* Azul más oscuro al pasar el mouse */
 }
 
-/* Título del calendario */
-.fc-toolbar-title {
-  font-size: 1.2rem;
-  font-weight: bold;
-  color: #343a40;
-  margin-bottom: 5px;
-  flex: 1 1 100%;
-  text-align: center;
-}
-
 /* Contenedor del calendario */
 .calendar-container {
-  margin: 10px;
-  padding: 10px;
+  padding: 15px;
   border-radius: 8px;
-  box-shadow: none;
-  background-color: rgb(0, 0, 0); /* Fondo blanco */
+  background-color: #ffffff; /* Fondo blanco */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Sombra para darle profundidad */
+  margin: 10px 0; /* Espaciado superior e inferior */
 }
 
 /* Casillas de los días en el calendario */
@@ -83,142 +127,59 @@ ion-content {
   height: auto;
   font-size: 1.3rem;
   font-weight: bold;
-  color: #343a40; /* Texto oscuro */
+  color: #000000; /* Números en negro */
+}
+
+/* Encabezados de los días (Lun, Mar, etc.) */
+.fc-col-header-cell {
+  background-color: #f8f9fa; /* Fondo claro */
+  color: #000000; /* Texto negro */
 }
 
 /* Eventos en las celdas */
 .fc-daygrid-event {
   font-size: 0.9em;
   line-height: 1.2;
-  color: white;
+  color: white; /* Texto blanco */
   background-color: #28a745; /* Verde para eventos */
   border: 1px solid #1e7e34;
 }
 
+
+
 /* Ajustes para vista móvil */
 @media (max-width: 768px) {
-  /* Encabezado del calendario */
-  .fc-toolbar {
-    padding: 6px;
-    border-radius: 6px;
-    flex-direction: column;
-  }
-
-  /* Contenedor de los botones */
-  .fc-toolbar-chunk {
-    margin: 0 auto;
-    padding: 0;
-    width: 100%;
-    max-width: 100%;
-    justify-content: center;
-  }
-
-  /* Botones de navegación */
-  .fc-toolbar .fc-button {
-    font-size: 0.9em;
-    margin: 1px;
-    flex: 1 1 30%;
-  }
-
-  /* Título del calendario */
-  .fc-toolbar-title {
-    font-size: 1rem;
-    margin-bottom: 5px;
-  }
-
-  /* Casillas de los días */
-  .fc-daygrid-day {
-    padding: 6px;
-    min-height: 80px;
-    font-size: 1rem;
-  }
-
-  /* Número del día */
-  .fc-daygrid-day-top {
-    font-size: 1.1rem;
-  }
-
-  /* Eventos en las celdas */
-  .fc-daygrid-event {
-    font-size: 0.8em;
-  }
-
-  /* Lista de turnos */
   .shift-list {
     margin-top: 10px;
     border-radius: 8px;
   }
 
-  /* Encabezado de la lista */
   ion-list-header {
     font-size: 0.9em;
     padding: 8px;
   }
 
-  /* Botón de asignación de turno */
-  .assign-button {
-    font-size: 0.85em;
-    padding: 6px;
-  }
-
-  /* Turno individual */
   .shift-item {
     font-size: 0.8em;
     padding: 8px;
   }
 
-  .current-view-title {
-    font-size: 1.2rem;
-    margin: 8px 0;
-  }
-
-  /* Íconos */
   .edit-icon,
   .trash-icon {
-    font-size: 1em;
+    font-size: 2rem; /* Íconos más grandes en móvil */
+    margin-left: 15px;
   }
 
-  /* Mensaje de no turnos */
   .no-shifts {
     font-size: 0.9em;
     padding: 10px;
   }
-}
 
-/* Estilos adicionales para una interfaz más amigable */
-.shift-list ion-item {
-  --background: #ffffff;
-  --ion-item-background: #ffffff;
-  margin: 5px 0;
-  border-radius: 8px;
-}
+  .fc-daygrid-day-top {
+    font-size: 1.1rem; /* Tamaño ligeramente reducido en móvil */
+  }
 
-.shift-list ion-label h2 {
-  font-size: 1rem;
-  color: #343a40;
-}
-
-.shift-list ion-label p {
-  font-size: 0.9rem;
-  color: #6c757d;
-}
-
-.assign-button {
-  margin: 10px 0;
-  --background: #007bff;
-  --background-activated: #0056b3;
-  color: white;
-}
-
-.edit-icon,
-.trash-icon {
-  font-size: 1.2rem;
-  color: #007bff;
-  margin-left: 10px;
-}
-
-.no-shifts p {
-  text-align: center;
-  color: #6c757d;
-  border-radius: 8px;
+  .fc-toolbar-title {
+    font-size: 1rem; /* Título ajustado para móviles */
+  }
 }

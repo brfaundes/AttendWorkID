@@ -1,3 +1,9 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Asignar Turnos</ion-title>
+  </ion-toolbar>
+</ion-header>
+
 <ion-content class="ion-padding calendar-content">
   <!-- Título de la vista actual -->
   <div class="current-view-title">{{ currentViewTitle }}</div>
@@ -6,15 +12,18 @@
     <full-calendar [options]="calendarOptions"></full-calendar>
   </div>
 
+  <div *ngIf="employeeShifts.length > 0 || employeeShifts.length === 0 " >
+    <ion-button expand="full" (click)="openAssignShiftModal()">
+      <ion-icon slot="start" name="add-circle-outline"></ion-icon>
+      Asignar Turno
+    </ion-button>
+  </div>
+
   <div *ngIf="employeeShifts.length > 0" class="shift-list">
-    <ion-list>
+    <ion-list class="turn-list">
       <ion-list-header>
         <h2>Turnos para el {{ selectedDate }}:</h2>
       </ion-list-header>
-      <ion-button expand="full" (click)="openAssignShiftModal()" class="assign-button">
-        <ion-icon slot="start" name="add-circle-outline"></ion-icon>
-        Asignar Turno
-      </ion-button>
       <ion-item *ngFor="let shift of employeeShifts" class="shift-item">
         <ion-label>
           <h2>{{ shift.employeeName }} {{ shift.employeeLastName }}</h2>
@@ -25,12 +34,7 @@
       </ion-item>
     </ion-list>
   </div>
-
-  <div *ngIf="employeeShifts.length === 0 && selectedDate" class="no-shifts">
-    <p>No hay turnos programados para el día {{ selectedDate }}.</p>
-    <ion-button expand="full" (click)="openAssignShiftModal()" class="assign-button">
-      <ion-icon slot="start" name="add-circle-outline"></ion-icon>
-      Asignar Turno
-    </ion-button>
+  <div *ngIf="employeeShifts.length === 0" class="no-shifts">
+    <p>No hay turnos asignados para esta fecha.</p>
   </div>
 </ion-content>

@@ -37,11 +37,10 @@ export class CalendarioPage implements OnInit {
    */
   initializeCalendar() {
     const aspectRatio = this.calculateAspectRatio();
-    const isMobile = window.innerWidth < 768;
-
+  
     this.calendarOptions = {
       plugins: [dayGridPlugin, timeGridPlugin, interactionPlugin],
-      initialView: isMobile ? 'timeGridWeek' : 'dayGridMonth',
+      initialView: 'dayGridMonth', // Siempre vista mensual
       headerToolbar: {
         left: 'prev,next',
         center: '',
@@ -56,14 +55,15 @@ export class CalendarioPage implements OnInit {
       eventContent: this.renderEventContent.bind(this), // Personalización del contenido de eventos
       aspectRatio, // Relación de aspecto inicial
       windowResize: this.handleWindowResize.bind(this), // Recalcula el aspectRatio en tiempo real
-      dayHeaderFormat: isMobile ? { weekday: 'short' } : { weekday: 'long' }, // Formato de los nombres de los días
+      dayHeaderFormat: { weekday: 'short' }, // Abreviaturas de los días
       contentHeight: 'auto', // Altura automática del contenido
-
+  
       // Añadimos estos parámetros para capturar cambios en la vista
       viewDidMount: this.handleViewDidMount.bind(this),
       datesSet: this.handleDatesSet.bind(this),
     };
   }
+  
 
   /**
    * Maneja el evento cuando la vista del calendario ha sido montada.

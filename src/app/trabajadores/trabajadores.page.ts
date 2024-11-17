@@ -32,11 +32,11 @@ export class TrabajadoresPage implements OnInit {
   selectedEditImage: File | null = null; // Imagen para editar trabajador
 
   constructor(
-    private database: DatabaseService, 
+    private database: DatabaseService,
     private modalController: ModalController,
     private alertController: AlertController,
     private storage: AngularFireStorage
-  ) {}
+  ) { }
 
   async ngOnInit() {
     this.checkUserRole();
@@ -92,8 +92,8 @@ export class TrabajadoresPage implements OnInit {
     return new Promise((resolve) => {
       // Consultar la base de datos para ver si ya existe un usuario con el mismo email o RUT
       this.database.getAll('trabajador').subscribe(trabajadores => {
-        const existe = trabajadores.some(trabajador => 
-          trabajador.email === this.trabajador.email || 
+        const existe = trabajadores.some(trabajador =>
+          trabajador.email === this.trabajador.email ||
           trabajador.rut_empleado === this.trabajador.rut_empleado
         );
         resolve(existe);
@@ -129,12 +129,12 @@ export class TrabajadoresPage implements OnInit {
             await fileRef.delete().toPromise();
             console.log('Foto anterior eliminada del storage.');
           }
-  
+
           // Paso 2: Subir la nueva imagen
           const filePath = `trabajadores/${Date.now()}_${this.selectedEditImage.name}`;
           const fileRef = this.storage.ref(filePath);
           const uploadTask = this.storage.upload(filePath, this.selectedEditImage);
-  
+
           uploadTask.snapshotChanges()
             .pipe(finalize(() => {
               fileRef.getDownloadURL().subscribe((url) => {
@@ -227,47 +227,80 @@ export class TrabajadoresPage implements OnInit {
       console.error('Error al obtener los trabajadores:', error);
     });
   }
-  
-  validarImg(): boolean{
-        // Verificar que se haya seleccionado una imagen
-        if (!this.selectedImage) {
-          this.mostrarAlerta('Error', 'Por favor, sube una foto del trabajador.');
-          return false;
-        }
-      return true;
+
+  validarImg(): boolean {
+    // Verificar que se haya seleccionado una imagen
+    if (!this.selectedImage) {
+      this.mostrarAlerta('Error', 'Por favor, sube una foto del trabajador.');
+      return false;
+    }
+    return true;
   }
 
   validarTrabajador(): boolean {
     const { email, rut_empleado, nombre } = this.trabajador;
-    
+  
     // Verificar que todos los campos requeridos estén completos
     if (!email || !rut_empleado || !nombre) {
       this.mostrarAlerta('Error', 'Por favor, completa todos los campos.');
       return false;
     }
+  
     // Validación para el nombre
     const nombreValido = /^[a-zA-Z\s]+$/.test(nombre);
     if (!nombreValido) {
       this.mostrarAlerta('Error', 'El nombre solo debe contener letras y espacios.');
       return false;
     }
-
+  
     // Validación para el correo electrónico
     const emailValido = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(email);
     if (!emailValido) {
       this.mostrarAlerta('Error', 'Por favor, ingresa un correo electrónico válido.');
       return false;
     }
-
-    // Validación para el RUT
-    if (rut_empleado.length > 10) {
-      this.mostrarAlerta('Error', 'El RUT no debe tener más de 10 caracteres.');
+  
+    // Validación para el RUT: Permitir guion como separador
+    const rutNormalizado = rut_empleado.replace(/[^0-9kK-]/g, ''); // Permitir números, "k", "K" y guion
+    const rutFormatoValido = /^\d+-[0-9kK]$/.test(rutNormalizado); // Validar el formato "12345678-9" o "12345678-k"
+    if (!rutFormatoValido) {
+      this.mostrarAlerta('Error', 'El RUT debe tener el formato "12345678-9" o "12345678-k".');
       return false;
     }
-
+  
+    // Validar el dígito verificador
+    if (!this.validarDigitoVerificador(rutNormalizado)) {
+      this.mostrarAlerta('Error', 'El RUT ingresado no es válido. Verifica el dígito verificador.');
+      return false;
+    }
+  
     return true;
-}
+  }
+  
 
+  validarDigitoVerificador(rutCompleto: string): boolean {
+    // Separar el número y el dígito verificador
+    const [rut, dv] = rutCompleto.split('-');
+    if (!rut || !dv) return false; // Validar que ambos componentes existan
+  
+    if (!/^\d+$/.test(rut)) return false; // Verificar que el RUT sean solo números
+    const dvUpper = dv.toUpperCase(); // Normalizar el dígito verificador
+  
+    let suma = 0;
+    let multiplicador = 2;
+  
+    // Calcular la suma para el dígito verificador
+    for (let i = rut.length - 1; i >= 0; i--) {
+      suma += parseInt(rut[i], 10) * multiplicador;
+      multiplicador = multiplicador === 7 ? 2 : multiplicador + 1;
+    }
+  
+    const resto = suma % 11;
+    const dvCalculado = resto === 0 ? '0' : resto === 1 ? 'K' : (11 - resto).toString();
+  
+    return dvUpper === dvCalculado;
+  }
+  
 
   async mostrarAlerta(header: string, message: string) {
     const alert = await this.alertController.create({
@@ -282,7 +315,7 @@ export class TrabajadoresPage implements OnInit {
     const query = this.rutBusqueda?.trim().toLowerCase();
     if (query) {
       this.listaDeTrabajadores = this.listaCompletaDeTrabajadores.filter(trabajador =>
-        trabajador.rut_empleado.toLowerCase().includes(query) || 
+        trabajador.rut_empleado.toLowerCase().includes(query) ||
         trabajador.nombre.toLowerCase().includes(query)
       );
     } else {
