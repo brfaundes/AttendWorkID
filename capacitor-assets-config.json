@@ -1,0 +1,8 @@
+{
+    "icon": {
+      "src": "src/assets/logo.png"
+    },
+    "splash": {
+      "src": "src/assets/logo.png"
+    }
+  }

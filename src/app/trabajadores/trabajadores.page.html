@@ -190,7 +190,11 @@
         <ion-label position="stacked">Cambiar Foto</ion-label>
         <input type="file" (change)="onEditImageSelected($event)" accept="image/*" />
       </ion-item>
-      <ion-button expand="block" class="add-worker-btn" (click)="confirmarEditarTrabajador()">Guardar cambios</ion-button>
+
+      <ion-footer>
+        <ion-button expand="block" class="add-worker-btn" (click)="confirmarEditarTrabajador()">Guardar cambios</ion-button>
+      </ion-footer>
+
 
     </ion-content>
 
