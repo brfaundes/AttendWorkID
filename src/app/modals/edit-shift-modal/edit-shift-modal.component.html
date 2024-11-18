@@ -1,8 +1,8 @@
-<ion-header>
-  <ion-toolbar>
+<ion-header >
+  <ion-toolbar class="header_Color">
     <ion-title>Modificar Turno</ion-title>
     <ion-buttons slot="end">
-      <ion-button (click)="closeModal()">Cerrar</ion-button>
+      <ion-button (click)="closeModal()"><ion-icon name="close-outline"></ion-icon></ion-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
@@ -41,7 +41,7 @@
     </ion-item>
 
     <!-- Botón para actualizar -->
-    <ion-button expand="full" type="submit" [disabled]="!selectedEmployee || !selectedDate || !startTime || !endTime">
+    <ion-button expand="full" type="submit" class="assign-button" [disabled]="!selectedEmployee || !selectedDate || !startTime || !endTime">
       Actualizar Turno
     </ion-button>
   </form>

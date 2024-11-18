@@ -2,10 +2,23 @@
 ion-header, ion-toolbar {
   --background: #424669;
 }
-
+ion-padding{
+  background-color:#424669;
+}
 ion-content {
+  
   --background: #B9BDD0;
   padding: 16px;
+}
+.titulo {
+  font-size: 20px; 
+  font-weight: bold; 
+  color: #373955; 
+  text-align: center; 
+}
+.modalfondo{
+  background-color: #ffffff;
+  
 }
 
 /* Estilo del modal de agregar/editar */
@@ -19,9 +32,11 @@ ion-modal::part(backdrop) {
   background: rgba(209, 213, 219, 0.7);
   opacity: 1;
 }
-
+.titulo{
+  color: #ffffff;
+}
 ion-modal ion-toolbar {
-  --background: #0e7490;
+  --background: #2D3250;
   --color: white;
 }
 
@@ -49,12 +64,12 @@ ion-footer {
 
 /* Estilo de la tarjeta del trabajador */
 ion-card {
-  background: #424669;
-  border-radius: 16px;
+  background: #4c5076;
+  border-radius: 4px;
   padding: 10px;
-  margin: 8px 0;
+  margin: -1px;
   color: white;
-  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  box-shadow: 10px 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 .tarjeta-trabajador {
@@ -66,7 +81,7 @@ ion-card {
 
 .tarjeta-trabajador ion-thumbnail {
   width: 100px;
-  height: 100px;
+  height: 200px;
   border-radius: 50%;
   overflow: hidden;
   margin-bottom: 10px;
@@ -100,7 +115,7 @@ ion-card {
 }
 
 /* Responsividad */
-@media (max-width: 600px) {
+
   ion-card {
     margin: 12px 0;
   }
@@ -108,8 +123,107 @@ ion-card {
   .tarjeta-trabajador h2 {
     font-size: 16px;
   }
+  .add-worker-btn{
+    background-color: #bc865d;
+    color: white;
+  }
   
   .tarjeta-trabajador p {
     font-size: 13px;
   }
+  .loading-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(255, 255, 255, 0.8); 
+    z-index: 9999;
+  }
+  
+  ion-spinner {
+    width: 50px;
+    height: 50px;
+    color: #ffffff; 
+  }
+  .modalAgregar{
+     --background: #353a54; 
+  }
+  
+  .input-item {
+    --background: #353a54; 
+    --color: #ffffff; 
+    border-radius: 8px;
+    padding: 5px;
+
+    ion-label {
+      font-size: 14px;
+      color: #ffffff;
+    }
+
+    ion-input,
+    ion-select {
+      font-size: 16px;
+    }
+
+    input[type="file"] {
+      color: #ffffff;
+      margin-top: 8px;
+    }
+  }
+
+  ion-footer {
+    margin-top: 20px;
+
+    .add-worker-btn {
+      --background: #bc865d; /* */
+      --color: #ffffff; 
+      font-weight: bold;
+      border-radius: 8px;
+    }
+  }
+
+
+.header-toolbar {
+  --background: #424669;
+  color: #ffffff;
+
+  .titulo-agregar {
+    font-size: 20px;
+    font-weight: bold;
+    color: #373955;
+  }
+
+  .close-button {
+    --background: transparent;
+    --color: #ffffff;
+
+    ion-icon {
+      font-size: 24px;
+    }
+  }
 }
+
+/* Responsividad */
+@media (max-width: 600px) {
+  .form-container {
+    padding: 10px;
+    gap: 10px;
+
+    .input-item {
+      ion-label {
+        font-size: 12px;
+      }
+
+      ion-input,
+      ion-select {
+        font-size: 14px;
+      }
+    }
+  }
+}
+  
+

@@ -1,5 +1,9 @@
 <ion-header>
+  
   <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button class="boton-menu"></ion-menu-button>
+    </ion-buttons>
     <ion-title>Estadísticas de Asistencia</ion-title>
   </ion-toolbar>
 </ion-header>
@@ -8,7 +12,7 @@
 <ion-content class="ion-padding">
   <div *ngIf="isAdmin" class="filtro-cargo">
     <div *ngIf="isAdmin" class="filtro-cargo">
-      <ion-button expand="block" (click)="openFilter()">Filtrar por Mes y Año</ion-button>
+      <ion-button expand="block" (click)="openFilter()">Filtros</ion-button>
     </div>
   </div>
   

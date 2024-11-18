@@ -1,8 +1,10 @@
-<ion-header>
-  <ion-toolbar color="primary">
+<ion-header >
+  <ion-toolbar class="headercolor">
     <ion-title>Asignar Turnos</ion-title>
     <ion-buttons slot="end">
-      <ion-button color="light" (click)="closeModal()">Cerrar</ion-button>
+      <ion-button color="light" (click)="closeModal()">
+        <ion-icon name="close-outline"></ion-icon>
+      </ion-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
@@ -50,7 +52,7 @@
           </ion-input>
         </ion-item>
 
-        <ion-button expand="block" type="submit" color="secondary" class="assign-button" [disabled]="!selectedEmployee || !selectedDates.length || !startTime || !durationHours">
+        <ion-button expand="block" type="submit" class="assign-button" [disabled]="!selectedEmployee || !selectedDates.length || !startTime || !durationHours">
           <ion-icon slot="start" name="checkmark-done-outline"></ion-icon>
           Asignar Turnos
         </ion-button>

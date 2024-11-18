@@ -1,143 +1,164 @@
 /* Estilos generales */
-ion-header, ion-toolbar {
-    --background: #424669; /* Color de fondo de la barra */
-  }
+ion-header,
+ion-toolbar {
+  --background: #424669;
+}
+
+ion-content {
+  --background: #505479;
+  height: 100%;
+}
+
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.login-form {
+  background-color: #424669;
   
-  ion-content {
-    --background: #424669; /* Color de fondo general */
-    height: 100%; /* Asegura que ocupe toda la altura de la pantalla */
-  }
-  
-  .container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100%; /* Ocupa toda la altura de la pantalla */
-    padding: 20px;
-  }
-  
+  border-radius: 8px;
+  padding: 30px;
+  width: 100%;
+  max-width: 600px;
+  height: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+.text-container {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+h2 {
+  font-size: 36px;
+  font-weight: 700;
+  color: #0e7491;
+  margin: 0;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.logo-container {
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+.logo {
+  width: 60%;
+  max-width: 200px;
+  height: auto;
+}
+
+.form-group {
+  margin-bottom: 20px;
+  width: 100%;
+}
+
+label {
+  font-size: 16px;
+  font-weight: bold;
+  margin-bottom: 8px;
+  display: block;
+  color: #ffffff;
+}
+
+.form-control {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 16px;
+  box-sizing: border-box;
+  transition: border-color 0.3s ease;
+}
+
+.form-control:focus {
+  border-color: #007bff;
+  outline: none;
+}
+
+.boton-iniciosesion {
+  --background: #f9b17a;
+  --border-radius: 8px;
+  --padding-start: 20px;
+  --padding-end: 20px;
+  font-size: 18px;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+  padding-bottom: 50px;
+}
+
+.boton-iniciosesion:hover {
+  --background: #0056b3;
+}
+
+/* Estilo del modal */
+ion-modal {
+  --height: 50%;
+  --border-radius: 16px;
+  --box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+}
+
+ion-modal::part(backdrop) {
+  background: rgba(209, 213, 219, 0.8);
+}
+
+ion-footer {
+  text-align: center;
+}
+
+/* Responsividad */
+@media (max-width: 768px) {
   .login-form {
-    background-color: #505479;
-    border-radius: 8px;
-    padding: 30px;
-    box-shadow: 10px;
-    width: 100%;
-    max-width: 600px; /* Limita el ancho máximo del formulario */
-    height: 80%; /* Toma el 80% de la altura de la pantalla */
-    display: flex;
-    flex-direction: column;
-    justify-content: center; /* Centra el contenido verticalmente */
-    align-items: center; /* Centra el contenido horizontalmente */
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    max-width: 100%;
   }
-  
-  .text-container {
-    text-align: center;
-    margin-bottom: 20px; /* Espaciado entre el texto y el logo */
-  }
-  
+
   h2 {
-    font-size: 36px; /* Tamaño grande para el título */
-    font-weight: 700; /* Negrita para mayor énfasis */
-    color: #0E7491; /* Color del texto */
-    margin: 0;
-    letter-spacing: 2px; /* Espaciado entre letras para mayor impacto */
-    text-transform: uppercase; /* Hace que el texto sea todo en mayúsculas */
-    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2); /* Sombra para dar un toque 3D */
-    padding: 10px 0; /* Espaciado vertical para mayor separación */
+    font-size: 28px;
   }
-  
-  .logo-container {
-    margin-bottom: 20px;
-    display: flex;
-    justify-content: center;
-    margin-top: 10%; /* Añade margen superior para que no quede pegado al borde */
-  }
-  
+
   .logo {
-    max-width: 50%; /* Ajusta el tamaño máximo del logo proporcional al espacio */
+    width: 70%;
+    max-width: 150px;
+  }
+
+  .form-control {
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  h2 {
+    font-size: 44px;
+    color: #ffffff;
+  }
+
+  .logo {
+    width: 200%;
+    max-width: 320px;
+    padding-top: 150px;  
+    padding-bottom: 100px;
+  }
+
+  .login-form {
+    padding: 15px;
     height: auto;
   }
-  
-  .form-group {
-    margin-bottom: 20px;
-  }
-  
-  label {
-    font-size: 16px;
-    font-weight: bold;
-    margin-bottom: 8px;
-    display: block;
-  }
-  
+
   .form-control {
-    width: 100%;
-    padding: 12px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    font-size: 16px;
-    box-sizing: border-box;
-    transition: border-color 0.3s ease;
+    font-size: 14px;
   }
-  
-  .form-control:focus {
-    border-color: #007bff;
-    outline: none;
-  }
-  
-  /* Botón de Iniciar sesión */
-  .boton-iniciosesion {
-    --background: #0E7491; /* Color de fondo del botón */
-    --border-radius: 8px;
-    --padding-start: 20px;
-    --padding-end: 20px;
-    font-size: 18px;
-    font-weight: bold;
-    transition: background-color 0.3s ease;
-  }
-  
-  .boton-iniciosesion:hover {
-    --background: #0056b3;
-  }
-  
-  /* Estilo del modal */
-  ion-modal {
-    --height: 50%;
-    --border-radius: 16px;
-    --box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
-  }
-  
-  ion-modal::part(backdrop) {
-    background: rgba(209, 213, 219);
-    opacity: 1;
-  }
-  
-  ion-modal ion-toolbar {
-    --background: rgb(14 116 144);
-    --color: white;
-  }
-  
-  ion-footer {
-    text-align: center;
-  }
-  
-  /* Responsividad */
-  @media (max-width: 600px) {
-    .login-form {
-      padding: 20px;
-      height: 90%; /* En pantallas pequeñas, el formulario ocupa más altura */
-    }
-  
-    .form-control {
-      font-size: 14px;
-    }
-  
-    .logo {
-      max-width: 80%; /* En pantallas pequeñas, el logo ocupa un poco más del espacio */
-    }
-  
-    h2 {
-      font-size: 28px; /* Ajuste para pantallas pequeñas */
-    }
-  }
-  
+}

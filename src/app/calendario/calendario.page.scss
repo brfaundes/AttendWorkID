@@ -9,7 +9,7 @@ ion-toolbar {
 
 ion-button {
   --background: #f9b17a; /* Fondo naranja */
-  --color: #ffffff; /* Texto blanco */
+  --color: #424769; /* Texto blanco */
 }
 
 .current-view-title {
@@ -20,7 +20,7 @@ ion-button {
   margin: 10px 0; /* Espaciado superior e inferior */
   font-size: 1.5rem; /* Tamaño de fuente */
   font-weight: bold; /* Texto en negrita */
-  color: #ffffff; /* Color del texto en blanco */
+  color: #2D3250; /* Color del texto en blanco */
 }
 
 .turn-list {
@@ -73,8 +73,11 @@ ion-list-header h2 {
 .no-shifts {
   text-align: center;
   font-size: 1rem;
-  color: #f9b17a; /* Mensaje en naranja */
+  color: #2D3250; /* Mensaje en naranja */
   margin-top: 20px;
+}
+.tituloasignar{
+  color: #2D3250;
 }
 
 /* Ajustes generales del encabezado del calendario */

@@ -4,7 +4,7 @@ import { AlertController } from '@ionic/angular';
 import * as faceapi from 'face-api.js';
 import { EstadisticasService } from '../services/estadisticas.service';
 import { formatDate } from '@angular/common';
-
+import { MenuController } from '@ionic/angular';
 @Component({
   selector: 'app-reconocimiento-facial',
   templateUrl: './reconocimiento-facial.page.html',
@@ -23,6 +23,7 @@ export class ReconocimientoFacialPage implements OnInit {
     private route: ActivatedRoute,
     private alertController: AlertController,
     private router: Router,
+    private menuController:MenuController,
     private estadisticasService: EstadisticasService // Servicio para actualizar estadísticas
   ) {
     this.route.queryParams.subscribe(params => {
@@ -34,8 +35,10 @@ export class ReconocimientoFacialPage implements OnInit {
   }
 
   async ngOnInit() {
+    this.menuController.enable(false);
     await this.cargarModelosFaceApi();
-    this.iniciarReconocimientoFacial(); // Ejecuta automáticamente la cámara y el reconocimiento facial
+    this.iniciarReconocimientoFacial();
+     // Ejecuta automáticamente la cámara y el reconocimiento facial
   }
 
   async cargarModelosFaceApi() {
