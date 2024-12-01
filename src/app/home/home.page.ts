@@ -5,6 +5,7 @@ import { CalendarService } from '../services/calendar.service';
 import { DatabaseService } from '../services/database.service';
 import { Trabajador } from '../models';
 import { ModalController } from '@ionic/angular';
+import { AlertController } from '@ionic/angular';
 import { FilterModalComponent } from '../modals/filter-modal/filter-modal.component';
 
 Chart.register(...registerables);
@@ -35,7 +36,8 @@ export class HomePage implements OnInit {
     private estadisticasService: EstadisticasService,
     private calendarService: CalendarService,
     private databaseService: DatabaseService,
-    private modalController: ModalController
+    private modalController: ModalController,
+    private alertController: AlertController
   ) {}
 
   ngOnInit() {
@@ -94,7 +96,7 @@ export class HomePage implements OnInit {
       this.calendarService.getTurnosDelMesParaTrabajador(id).subscribe((turnos) => {
         this.turnosDelMes = turnos;
       });
-    }
+    } 
   }
 
   // Método llamado al seleccionar un trabajador en el desplegable
@@ -221,7 +223,19 @@ export class HomePage implements OnInit {
         this.loadChartData();
       }
     });
+
+
   
     return await modal.present();
+  }
+  
+  async mostrarAlerta(header: string, message: string, color: string) {
+    const alert = await this.alertController.create({
+      header: header,
+      message: message,
+      buttons: ['OK'],
+      cssClass: color,
+    });
+    await alert.present();
   }
 }

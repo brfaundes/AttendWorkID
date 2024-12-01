@@ -1,8 +1,8 @@
-<ion-header >
+<ion-header>
   <ion-toolbar class="headercolor">
     <ion-title>Asignar Turnos</ion-title>
     <ion-buttons slot="end">
-      <ion-button color="light" (click)="closeModal()">
+      <ion-button (click)="closeModal()">
         <ion-icon name="close-outline"></ion-icon>
       </ion-button>
     </ion-buttons>
@@ -24,35 +24,28 @@
 
         <ion-item lines="none">
           <ion-label position="stacked">Fechas del turno</ion-label>
-          <ion-datetime display-format="DD/MM/YYYY" picker-format="DD/MM/YYYY"
-                        [(ngModel)]="selectedDates" name="selectedDates" 
-                        [min]="minDate" required
-                        multiple="true"
-                        presentation="date">
+          <ion-datetime display-format="DD/MM/YYYY" picker-format="DD/MM/YYYY" [(ngModel)]="selectedDates"
+            name="selectedDates" [min]="minDate" required multiple="true" presentation="date">
           </ion-datetime>
         </ion-item>
 
         <ion-item lines="none">
           <ion-label position="stacked">Hora de inicio</ion-label>
-          <ion-datetime display-format="HH:mm" picker-format="HH:mm" presentation="time"
-                        [(ngModel)]="startTime" name="startTime" required>
+          <ion-datetime display-format="HH:mm" picker-format="HH:mm" presentation="time" [(ngModel)]="startTime"
+            name="startTime" required>
           </ion-datetime>
         </ion-item>
 
         <ion-item lines="none">
           <ion-label position="stacked">Duración (horas)</ion-label>
-          <ion-input type="number"
-                     [(ngModel)]="durationHours"
-                     name="durationHours"
-                     min="1"
-                     required
-                     (keydown)="preventInvalidInput($event)"
-                     (ionBlur)="validateDuration()"
-                     placeholder="Ingrese la duración en horas">
+          <ion-input type="number" [(ngModel)]="durationHours" name="durationHours" min="1" required
+            (keydown)="preventInvalidInput($event)" (ionBlur)="validateDuration()"
+            placeholder="Ingrese la duración en horas">
           </ion-input>
         </ion-item>
 
-        <ion-button expand="block" type="submit" class="assign-button" [disabled]="!selectedEmployee || !selectedDates.length || !startTime || !durationHours">
+        <ion-button expand="block" type="submit" class="assign-button"
+          [disabled]="!selectedEmployee || !selectedDates.length || !startTime || !durationHours">
           <ion-icon slot="start" name="checkmark-done-outline"></ion-icon>
           Asignar Turnos
         </ion-button>

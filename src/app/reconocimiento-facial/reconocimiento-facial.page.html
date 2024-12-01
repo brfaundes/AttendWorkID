@@ -10,4 +10,23 @@
     <video #video autoplay muted></video>
     <canvas #overlayCanvas style="position: absolute; top: 0; left: 0;"></canvas>
   </div>
+
+
+  <ion-modal [isOpen]="isModalOpen">
+    <ng-template>
+      <ion-header>
+        <ion-toolbar>
+          <ion-title>Verificación Confirmada</ion-title>
+        </ion-toolbar>
+      </ion-header>
+      <div class="confirmation-container ion-text-center">
+        <ion-icon name="checkmark-circle" class="warning-icon"></ion-icon>
+        <h2>Bienvenido, {{ nombre }}!</h2>
+        <p class="welcome-message">No tienes turno asignado hoy</p>
+        <ion-button color="warning" expand="block" (click)="redirigirAlLogin()">Volver al Inicio</ion-button>
+      </div>
+    </ng-template>
+  </ion-modal>
+  
+
 </ion-content>

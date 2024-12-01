@@ -3,8 +3,11 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { AlertController } from '@ionic/angular';
 import * as faceapi from 'face-api.js';
 import { EstadisticasService } from '../services/estadisticas.service';
-import { formatDate } from '@angular/common';
+import { CalendarService } from '../services/calendar.service';  // Asegúrate de importar el servicio de calendar
 import { MenuController } from '@ionic/angular';
+import { ModalController } from '@ionic/angular';
+
+
 @Component({
   selector: 'app-reconocimiento-facial',
   templateUrl: './reconocimiento-facial.page.html',
@@ -18,13 +21,17 @@ export class ReconocimientoFacialPage implements OnInit {
   apellido: string = '';
   modelosCargados: boolean = false;
   reconocimientoEnProgreso: boolean = false;
+  isModalOpen = false;
 
   constructor(
     private route: ActivatedRoute,
     private alertController: AlertController,
     private router: Router,
-    private menuController:MenuController,
-    private estadisticasService: EstadisticasService // Servicio para actualizar estadísticas
+    private menuController: MenuController,
+    private estadisticasService: EstadisticasService, // Servicio para estadísticas
+    private calendarService: CalendarService, // Servicio para turnos
+    private modalController: ModalController 
+
   ) {
     this.route.queryParams.subscribe(params => {
       this.rut = params['rut'];
@@ -38,7 +45,6 @@ export class ReconocimientoFacialPage implements OnInit {
     this.menuController.enable(false);
     await this.cargarModelosFaceApi();
     this.iniciarReconocimientoFacial();
-     // Ejecuta automáticamente la cámara y el reconocimiento facial
   }
 
   async cargarModelosFaceApi() {
@@ -105,22 +111,22 @@ export class ReconocimientoFacialPage implements OnInit {
         clearInterval(intervaloDeteccion);
         return;
       }
-  
+
       const usuarioRostro = await faceapi
         .detectSingleFace(video)
         .withFaceLandmarks()
         .withFaceDescriptor();
-  
+
       if (usuarioRostro) {
         const distancia = faceapi.euclideanDistance(descriptorReferencia, usuarioRostro.descriptor);
-  
+
         if (distancia < 0.6) {
           this.reconocimientoEnProgreso = false;
           clearInterval(intervaloDeteccion);
           this.detenerVideo();
-  
+
           const nombreCompleto = `${this.nombre} ${this.apellido}`;
-  
+
           // Obtener la hora actual en formato "HH:mm"
           const ahora = new Date();
           const horaActual = ahora.toLocaleTimeString('en-GB', {
@@ -128,12 +134,22 @@ export class ReconocimientoFacialPage implements OnInit {
             minute: '2-digit',
             hour12: false,
           });
-  
-          this.estadisticasService.registrarDiaTrabajado(this.rut, nombreCompleto, horaActual);
-  
-          // Redirección a la página de verificación confirmada
-          this.router.navigate(['/verificacion-confirmada'], {
-            queryParams: { nombre: this.nombre, apellido: this.apellido },
+
+          // Verificar si el trabajador tiene turnos asignados
+          this.calendarService.getTurnosDelMesParaTrabajador(this.rut).subscribe(turnos => {
+            if (turnos.length === 0) {
+              // Si no tiene turnos, mostrar una alerta
+              this.setOpen(true);
+              //this.mostrarAlerta('Sin turnos', 'No tienes turnos asignados para este mes.', 'error');
+            } else {
+              // Si tiene turnos, registrar el día trabajado
+              this.estadisticasService.registrarDiaTrabajado(this.rut, nombreCompleto, horaActual);
+
+              // Redirigir a la página de verificación confirmada
+              this.router.navigate(['/verificacion-confirmada'], {
+                queryParams: { nombre: this.nombre, apellido: this.apellido },
+              });
+            }
           });
         } else {
           this.reconocimientoEnProgreso = false;
@@ -152,6 +168,21 @@ export class ReconocimientoFacialPage implements OnInit {
       stream.getTracks().forEach(track => track.stop());
       video.srcObject = null;
     }
+  }
+//modal si el trabajador no tiene turno
+  setOpen(isOpen: boolean) {
+    this.isModalOpen = isOpen;
+  }
+
+  async redirigirAlLogin() {
+    // Cerrar el modal antes de redirigir
+    const modal = await this.modalController.getTop();  // Obtener el modal activo
+    if (modal) {
+      await modal.dismiss();  // Cerrar el modal
+    }
+  
+    // Redirigir al login
+    this.router.navigate(['/login-rut']);
   }
 
   async mostrarAlerta(header: string, message: string, color: string) {

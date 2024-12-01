@@ -26,7 +26,7 @@
   <div *ngIf="employeeShifts.length > 0" class="shift-list">
     <ion-list class="turn-list">
       <ion-list-header>
-        <h2>Turnos para el {{ selectedDate }}:</h2>
+        <h2>Turnos para el {{ selectedDate | date: 'dd MMMM yyyy' }}:</h2>
       </ion-list-header>
       <ion-item *ngFor="let shift of employeeShifts" class="shift-item">
         <ion-label>

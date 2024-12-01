@@ -1,13 +1,16 @@
-<ion-header >
+<ion-header>
   <ion-toolbar class="header_Color">
     <ion-title>Modificar Turno</ion-title>
     <ion-buttons slot="end">
-      <ion-button (click)="closeModal()"><ion-icon name="close-outline"></ion-icon></ion-button>
-    </ion-buttons>
+      <ion-button (click)="closeModal()">
+        <ion-icon name="close-outline"></ion-icon></ion-button>
+      </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
+<ion-content class="ion-padding">
+  <ion-card class="animate-modal">
+    <ion-card-content>
   <form (ngSubmit)="updateShift()">
     <ion-item>
       <ion-label>Trabajador</ion-label>
@@ -21,28 +24,31 @@
     <!-- Modificar Fecha del Turno -->
     <ion-item>
       <ion-label position="stacked">Fecha del turno</ion-label>
-      <ion-datetime display-format="DD/MM/YYYY" picker-format="DD/MM/YYYY" 
-                    [(ngModel)]="selectedDate" name="selectedDate" 
-                    [min]="minDate" required
-                    presentation="date">
+      <ion-datetime display-format="DD/MM/YYYY" picker-format="DD/MM/YYYY" [(ngModel)]="selectedDate"
+        name="selectedDate" [min]="minDate" required presentation="date">
       </ion-datetime>
     </ion-item>
 
     <!-- Hora de Inicio -->
     <ion-item>
       <ion-label>Hora de inicio</ion-label>
-      <ion-datetime display-format="HH:mm" picker-format="HH:mm" [(ngModel)]="startTime" name="startTime" presentation="time" required></ion-datetime>
+      <ion-datetime display-format="HH:mm" picker-format="HH:mm" [(ngModel)]="startTime" name="startTime"
+        presentation="time" required></ion-datetime>
     </ion-item>
 
     <!-- Hora de Fin -->
     <ion-item>
       <ion-label>Hora de fin</ion-label>
-      <ion-datetime display-format="HH:mm" picker-format="HH:mm" [(ngModel)]="endTime" name="endTime" presentation="time" required></ion-datetime>
+      <ion-datetime display-format="HH:mm" picker-format="HH:mm" [(ngModel)]="endTime" name="endTime"
+        presentation="time" required></ion-datetime>
     </ion-item>
 
     <!-- Botón para actualizar -->
-    <ion-button expand="full" type="submit" class="assign-button" [disabled]="!selectedEmployee || !selectedDate || !startTime || !endTime">
+    <ion-button expand="full" type="submit" class="assign-button"
+      [disabled]="!selectedEmployee || !selectedDate || !startTime || !endTime">
       Actualizar Turno
     </ion-button>
   </form>
+</ion-card-content>
+</ion-card>
 </ion-content>

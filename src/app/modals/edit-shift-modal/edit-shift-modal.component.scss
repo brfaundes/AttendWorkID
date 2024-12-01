@@ -8,3 +8,48 @@
     --background: #f9b17a;
     
   }
+
+  .animate-modal {
+    animation: zoomIn 0.3s ease-out;
+    --background:#424769;
+  }
+  
+  .assign-button {
+    --border-radius: 8px;
+    margin-top: 20px;
+    animation: pulse 1s infinite alternate;
+    --background: #f9b17a;
+    
+  }
+  
+  .headercolor{
+    --background:#424769;
+  }
+  .ion-padding{
+    --background:#B9BDD0;
+  }
+  .assign-button:hover {
+    background-color: #4CAF50;
+    transform: scale(1.02);
+  }
+  
+  @keyframes zoomIn {
+    from {
+      opacity: 0;
+      transform: scale(0.8);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+  
+  @keyframes pulse {
+    from {
+      transform: scale(1);
+    }
+    to {
+      transform: scale(1.05);
+    }
+  }
+  
