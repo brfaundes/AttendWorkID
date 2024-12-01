@@ -115,14 +115,14 @@
           </ion-item>
           <ion-item lines="none">
             <!-- Editar trabajador -->
-            <ion-button *ngIf="isAdmin" fill="outline" class="botonEditar"
+            <ion-button *ngIf="isAdmin"  class="botonEditar"
               (click)="cargarTrabajadorParaEditar(trabajador); modalEditar.present()">
               <ion-icon slot="icon-only" name="create"></ion-icon>
 
             </ion-button>
 
             <!-- Eliminar trabajador -->
-            <ion-button *ngIf="isAdmin && trabajador.id" fill="outline" class="botonEliminar"
+            <ion-button *ngIf="isAdmin && trabajador.id" class="botonEliminar"
               (click)="confirmarEliminarTrabajador(trabajador.id!, trabajador.fotoUrl!)">
               <ion-icon slot="icon-only" name="trash-bin"></ion-icon>
             </ion-button>
