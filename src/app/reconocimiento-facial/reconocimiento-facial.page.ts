@@ -136,8 +136,15 @@ export class ReconocimientoFacialPage implements OnInit {
           });
 
           // Verificar si el trabajador tiene turnos asignados
+
+          
           this.calendarService.getTurnosDelMesParaTrabajador(this.rut).subscribe(turnos => {
-            if (turnos.length === 0) {
+
+            const fechaHoy = new Date().toISOString().split('T')[0];
+            const turnosHoy = turnos.filter(turno => turno.date === fechaHoy);
+          
+
+            if (turnosHoy.length === 0) {
               // Si no tiene turnos, mostrar una alerta
               this.setOpen(true);
               //this.mostrarAlerta('Sin turnos', 'No tienes turnos asignados para este mes.', 'error');
