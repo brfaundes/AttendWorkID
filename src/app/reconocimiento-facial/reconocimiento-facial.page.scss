@@ -73,13 +73,6 @@ ion-modal {
   left: 0;
 }
 
-@media (max-width: 768px) {
-  /* Ajustes específicos para dispositivos móviles o tablets */
-  ion-modal {
-    --width: 90%;
-    --height: auto;
-  }
-}
 
 .confirmation-container {
   display: flex;
@@ -97,6 +90,7 @@ ion-modal {
 
 .welcome-message {
   font-size: 18px;
-  color: #333;
+  color: #727272;
 }
+
 

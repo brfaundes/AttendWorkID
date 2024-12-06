@@ -35,8 +35,8 @@
   </div>
 
   <div *ngIf="isAdmin" class="selector-trabajador">
-    <ion-label>Selecciona un trabajador</ion-label>
-    <ion-select [(ngModel)]="trabajadorSeleccionadoID" (ionChange)="onTrabajadorSeleccionado()">
+    <ion-label>Turnos por trabajador</ion-label>
+    <ion-select  [(ngModel)]="trabajadorSeleccionadoID" (ionChange)="onTrabajadorSeleccionado()">
       <ion-select-option *ngFor="let trabajador of listaDeTrabajadores" [value]="trabajador.rut_empleado">
         {{ trabajador.nombre }} {{ trabajador.apellido }}
       </ion-select-option>

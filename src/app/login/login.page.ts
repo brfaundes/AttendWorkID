@@ -29,7 +29,6 @@ export class LoginPage {
 
     this.loginService.loginWithRutAndPassword(this.rutEmpleado, this.contrasena).subscribe(
       (trabajador) => {
-        console.log('Resultado del login:', trabajador);
         if (trabajador) {
           localStorage.setItem('user', JSON.stringify(trabajador));
           this.menuController.enable(true);

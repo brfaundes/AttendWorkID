@@ -17,11 +17,21 @@
   padding-top: 70px;
 }
 
+.login{
+  display: center;
+  place-items: center;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: auto; 
+}
 
 #login-card .card-title, 
    #login-card .ion-label, 
    #login-card .ion-input {
        color: white; /* Color de texto blanco */
+       display: center;
+       place-items: center;
    }
    
   .card-body {
@@ -29,6 +39,7 @@
     align-items: center;
     text-align: center;
     padding: 20px; 
+    
   }
 
 .boton-iniciosesion{
@@ -44,4 +55,5 @@ ion-header,ion-toolbar{
 
 ion-content{
   --background: #2D3250;
+  
 }

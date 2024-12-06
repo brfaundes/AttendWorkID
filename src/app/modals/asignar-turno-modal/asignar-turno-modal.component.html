@@ -14,8 +14,7 @@
     <ion-card-content>
       <form (ngSubmit)="assignShifts()">
         <ion-item lines="none" *ngIf="employees.length > 0">
-          <ion-label position="stacked">Trabajador</ion-label>
-          <ion-select [(ngModel)]="selectedEmployee" name="employee" required interface="popover">
+          <ion-select placeholder="Trabajador" [(ngModel)]="selectedEmployee" name="employee" required interface="popover" >
             <ion-select-option *ngFor="let employee of employees" [value]="employee">
               {{ employee.nombre }} {{ employee.apellido }}
             </ion-select-option>
@@ -23,14 +22,15 @@
         </ion-item>
 
         <ion-item lines="none">
-          <ion-label position="stacked">Fechas del turno</ion-label>
+          <ion-label position="stacked">Fechas del turno</ion-label><br>
           <ion-datetime display-format="DD/MM/YYYY" picker-format="DD/MM/YYYY" [(ngModel)]="selectedDates"
             name="selectedDates" [min]="minDate" required multiple="true" presentation="date">
           </ion-datetime>
+
         </ion-item>
 
         <ion-item lines="none">
-          <ion-label position="stacked">Hora de inicio</ion-label>
+          <ion-label position="stacked">Hora de inicio</ion-label><br>
           <ion-datetime display-format="HH:mm" picker-format="HH:mm" presentation="time" [(ngModel)]="startTime"
             name="startTime" required>
           </ion-datetime>

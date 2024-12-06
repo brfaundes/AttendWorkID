@@ -54,6 +54,8 @@ export class EstadisticasService {
     }
   }
 
+  
+
   // Método original sin filtros
   getEstadisticasMensuales(): Observable<any[]> {
     const fechaActual = new Date();
@@ -65,6 +67,8 @@ export class EstadisticasService {
 
     return estadisticasRef.valueChanges({ idField: 'id' });
   }
+
+  
 
   // Método original para trabajador específico
   getEstadisticasMensualesParaTrabajador(rut_empleado: string): Observable<any> {

@@ -19,12 +19,14 @@
           <ion-title>Verificación Confirmada</ion-title>
         </ion-toolbar>
       </ion-header>
-      <div class="confirmation-container ion-text-center">
+      <ion-content class="ion-text-center">
+      <div class="confirmation-container">
         <ion-icon name="checkmark-circle" class="warning-icon"></ion-icon>
         <h2>Bienvenido, {{ nombre }}!</h2>
         <p class="welcome-message">No tienes turno asignado hoy</p>
         <ion-button color="warning" expand="block" (click)="redirigirAlLogin()">Volver al Inicio</ion-button>
       </div>
+    </ion-content>
     </ng-template>
   </ion-modal>
   
